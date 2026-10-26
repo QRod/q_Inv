@@ -1,0 +1,51 @@
+.venv/
+__pycache__/
+data/
+*.xlsx
+*.xls
+secrets/
+
+# Configuración y credenciales locales
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+ssh_known_hosts
+
+# Bases de datos, respaldos y resultados locales
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.tar
+*.tar.gz
+*.zip
+*.log
+validation/
+backups/
+
+# Herramientas y sistema operativo
+.DS_Store
+.pytest_cache/
+node_modules/
+
+# Configuración de instalaciones y artefactos
+._*
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.sqlite*
+*.db*
+*.zip
+*.tar.gz
+dist/
+validation/
+backups/
+secrets/
+node_modules/
