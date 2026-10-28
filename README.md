@@ -76,7 +76,7 @@ El resultado y `SHA256SUMS` quedan en `dist/`, excluido del repositorio. Los paq
 Requiere Python 3.11 o posterior con soporte para venv.
 
 ```sh
-cd /ruta/a/P_REA/q_Inv
+cd /ruta/a/P_REA/Proyectos/q_Inv
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/python server.py --create-user admin
