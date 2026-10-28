@@ -52,6 +52,14 @@ const path=require('node:path');
   await page.locator('[data-page=inventory]').click();assert.equal(await page.locator('#group-filter').locator('option:checked').textContent(),'Continuidad');assert.equal(await page.locator('#servers tr').count(),2);
   await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await page.screenshot({path:'validation/organization-inventory-mobile.png',fullPage:true});
   await page.locator('[data-page=organization]').click();await catalogTab('Responsables');assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await page.screenshot({path:'validation/organization-catalog-mobile.png',fullPage:true});
-  assert.deepEqual(errors,[]);console.log('Browser QA OK: dashboard, catalogs, multiple memberships, individual/bulk organization, preview, filters, safe rename and mobile layout.');
+  await page.setViewportSize({width:1440,height:1050});await page.locator('[data-page=inventory]').click();
+  await page.locator('#select-all').check();await page.locator('#search').fill('web-prod');
+  await page.locator('#delete-selected').click();await page.locator('#delete-rows tr').first().waitFor();assert.equal(await page.locator('#delete-rows tr').count(),2);
+  assert.equal(await page.locator('#delete-commit').isDisabled(),true);await page.locator('#delete-cancel').click();
+  assert.equal((await page.evaluate(async()=>await (await fetch('/api/servers')).json())).length,3);
+  await page.locator('#delete-selected').click();await page.locator('#delete-rows tr').first().waitFor();await page.locator('#delete-confirm-check').check();await page.locator('#delete-commit').click();await page.locator('#delete-dialog').waitFor({state:'hidden'});
+  await page.getByText('2 servidores eliminados del inventario',{exact:true}).waitFor();await page.locator('#search').fill('');
+  const remaining=await page.evaluate(async()=>await (await fetch('/api/servers')).json());assert.equal(remaining.length,1);assert.equal(remaining[0].name,'app-dev-01');assert.equal(await page.locator('#delete-selected').isDisabled(),true);
+  assert.deepEqual(errors,[]);console.log('Browser QA OK: dashboard, catalogs, multiple memberships, individual/bulk organization, preview, filters, safe rename, mobile layout and confirmed deletion across filters.');
  }finally{if(browser)await browser.close();fixture.kill('SIGTERM');}
 })().catch(e=>{console.error(e);process.exitCode=1;});

@@ -168,6 +168,7 @@ class Monitor:
             if credentials: credentials['password']=''
             try:
                 with self.db() as c:
+                    c.execute('BEGIN IMMEDIATE')
                     current=c.execute('SELECT c.revision,c.enabled,s.ip FROM server_credentials c JOIN servers s ON s.id=c.server_id WHERE c.server_id=?',(row['id'],)).fetchone()
                     if current and current['enabled'] and current['revision']==row['revision'] and current['ip']==row['ip']:
                         interval=c.execute('SELECT interval_minutes FROM settings WHERE id=1').fetchone()[0]

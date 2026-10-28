@@ -7,7 +7,7 @@ async function api(path, data, raw = false, signal) {
   return value;
 }
 function toast(text) { $('#toast').textContent=text; $('#toast').hidden=false; clearTimeout(toast.timer); toast.timer=setTimeout(()=>$('#toast').hidden=true,5500); }
-function showLogin() { $('#workspace').hidden=true; $('#login').hidden=false; servers=[]; pending=null; csrf=''; selectedServers.clear();for(const id of ['server-dialog','catalog-dialog','bulk-dialog'])$('#'+id).close(); }
+function showLogin() { $('#workspace').hidden=true; $('#login').hidden=false; servers=[]; pending=null; csrf=''; selectedServers.clear();for(const id of ['server-dialog','catalog-dialog','bulk-dialog','delete-dialog'])$('#'+id).close(); }
 async function enter(user) { $('#user').textContent=user; $('#login').hidden=true; $('#workspace').hidden=false; await reload(); page('dashboard'); const settings=await api('settings'); for(const k of ['interval_minutes','retention_days']) $('#settings-form').elements[k].value=settings[k]; }
 function page(name) { for (const p of ['dashboard','inventory','organization','import','settings']) $('#'+p+'-page').hidden=p!==name; document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name)); $('#breadcrumb').textContent={dashboard:'Dashboard',inventory:'Inventario',organization:'Organización',import:'Importar RVTools',settings:'Configuración'}[name]; if(name==='dashboard')loadDashboard().catch(e=>toast(e.message)); }
 async function reload() {
@@ -154,7 +154,7 @@ function updateSelection(){
   $('#select-all').checked=filtered.length>0&&selectedVisible===filtered.length;$('#select-all').indeterminate=selectedVisible>0&&selectedVisible<filtered.length;$('#select-all').disabled=!filtered.length;
   const hidden=[...selectedServers].filter(id=>!visible.has(id)).length;
   $('#selection-label').textContent=selectedServers.size?`${selectedServers.size} seleccionados${hidden?` · ${hidden} fuera del filtro actual`:''}`:'Selecciona servidores para organizarlos en conjunto.';
-  $('#bulk-open').disabled=!selectedServers.size;$('#clear-selection').disabled=!selectedServers.size;
+  $('#bulk-open').disabled=!selectedServers.size;$('#clear-selection').disabled=!selectedServers.size;$('#delete-selected').disabled=!selectedServers.size;
 }
 $('#select-all').onchange=e=>{const filtered=filteredInventory();if(e.target.checked&&new Set([...selectedServers,...filtered.map(s=>s.id)]).size>500){e.target.checked=false;toast('Puedes organizar hasta 500 servidores en una operación.');return;}for(const server of filtered)e.target.checked?selectedServers.add(server.id):selectedServers.delete(server.id);render();};
 $('#clear-selection').onclick=()=>{selectedServers.clear();render();};
@@ -239,4 +239,29 @@ $('#bulk-form').onsubmit=async event=>{
   catch(error){$('#bulk-error').textContent=error.message;bulkToken=null;$('#bulk-preview-box').hidden=true;}finally{$('#bulk-commit').disabled=true;}
 };
 
+
+
+let deletionToken=null,deletionGeneration=0;
+$('#delete-selected').onclick=async()=>{
+  if(!selectedServers.size)return;
+  const generation=++deletionGeneration;deletionToken=null;
+  $('#delete-confirm-check').checked=false;$('#delete-commit').disabled=true;$('#delete-confirm-check').disabled=true;
+  $('#delete-error').textContent='';$('#delete-rows').replaceChildren();$('#delete-summary').textContent='Preparando la selección…';$('#delete-dialog').showModal();
+  try{
+    const result=await api('servers/delete-preview',{ids:[...selectedServers]});
+    if(generation!==deletionGeneration||!$('#delete-dialog').open)return;
+    deletionToken=result.token;$('#delete-summary').textContent=`${result.selected} servidores, incluidos los seleccionados fuera del filtro actual. La confirmación expira en 10 minutos.`;
+    for(const item of result.records){const row=node('tr');cell(row,item.name,item.ip);cell(row,item.has_credentials?'Sí':'No');cell(row,item.metric_samples);$('#delete-rows').append(row);}
+    $('#delete-confirm-check').disabled=false;
+  }catch(error){$('#delete-error').textContent=error.message;}
+};
+$('#delete-confirm-check').onchange=()=>$('#delete-commit').disabled=!deletionToken||!$('#delete-confirm-check').checked;
+$('#delete-close').onclick=$('#delete-cancel').onclick=()=>$('#delete-dialog').close();
+$('#delete-dialog').addEventListener('close',()=>{deletionGeneration++;deletionToken=null;});
+$('#delete-form').onsubmit=async event=>{
+  event.preventDefault();if(!deletionToken||!$('#delete-confirm-check').checked)return;
+  $('#delete-commit').disabled=true;$('#delete-confirm-check').disabled=true;$('#delete-error').textContent='';
+  try{const result=await api('servers/delete',{token:deletionToken,confirmed:true});$('#delete-dialog').close();selectedServers.clear();await reload();await loadDashboard();toast(`${result.deleted} servidores eliminados del inventario`);}
+  catch(error){deletionToken=null;$('#delete-error').textContent=error.message+' Cierra esta ventana y revisa la selección de nuevo.';}
+};
 (async()=>{try{const session=await api('session');if(session.authenticated){csrf=session.csrf;await enter(session.username);}}catch(error){toast(error.message);}})();

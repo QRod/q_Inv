@@ -12,6 +12,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 from inventory import FIELDS, ValidationError, validate, parse_rvtools, anonymize
 import organization
+import deletion
 from discovery import discover
 from vault import load_key
 from monitoring import Monitor, configure, connection, dashboard
@@ -40,6 +41,9 @@ def init():
         CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT UNIQUE NOT NULL, salt TEXT NOT NULL, password TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY, user_id INTEGER, csrf TEXT, expires REAL);
         CREATE TABLE IF NOT EXISTS servers(id INTEGER PRIMARY KEY, name TEXT NOT NULL, uuid TEXT, os TEXT, cpu INTEGER, ram_gb REAL, disk_gb REAL, ip TEXT, host TEXT, cluster TEXT, power TEXT, kind TEXT, group_name TEXT, application TEXT, source TEXT, updated_at TEXT DEFAULT CURRENT_TIMESTAMP);
+        CREATE TABLE IF NOT EXISTS server_ids(id INTEGER PRIMARY KEY CHECK(id=1),last_id INTEGER NOT NULL);
+        INSERT OR IGNORE INTO server_ids SELECT 1,coalesce(max(id),0) FROM servers;
+        CREATE TABLE IF NOT EXISTS deletion_previews(token TEXT PRIMARY KEY,user_id INTEGER NOT NULL,payload TEXT NOT NULL,signature TEXT NOT NULL,expires REAL NOT NULL);
         CREATE UNIQUE INDEX IF NOT EXISTS server_uuid ON servers(uuid) WHERE uuid != '';
         CREATE TABLE IF NOT EXISTS imports(token TEXT PRIMARY KEY, user_id INTEGER, payload TEXT, expires REAL);
         CREATE TABLE IF NOT EXISTS settings(id INTEGER PRIMARY KEY CHECK(id=1), interval_minutes INTEGER, retention_days INTEGER);
@@ -59,8 +63,10 @@ def password_hash(password, salt):
 
 def save_server(c, data, source, server_id=None):
     if server_id is None:
-        cur = c.execute(f"INSERT INTO servers({','.join(FIELDS)},source) VALUES({','.join('?' for _ in range(len(FIELDS)+1))})", [data[k] for k in FIELDS] + [source])
-        return cur.lastrowid
+        c.execute('UPDATE server_ids SET last_id=max(last_id,coalesce((SELECT max(id) FROM servers),0))+1 WHERE id=1')
+        new_id=c.execute('SELECT last_id FROM server_ids WHERE id=1').fetchone()[0]
+        c.execute(f"INSERT INTO servers(id,{','.join(FIELDS)},source) VALUES({','.join('?' for _ in range(len(FIELDS)+2))})", [new_id]+[data[k] for k in FIELDS]+[source])
+        return new_id
     c.execute(f"UPDATE servers SET {','.join(k+'=?' for k in FIELDS)},source=?,updated_at=CURRENT_TIMESTAMP WHERE id=?", [data[k] for k in FIELDS] + [source, server_id])
     return server_id
 
@@ -151,6 +157,10 @@ class Handler(BaseHTTPRequestHandler):
                     c.commit()
                     return self.send(200, {'token':token,'records':records,'errors':errors})
                 d = json.loads(self.body())
+                if path in ('/api/servers/delete-preview','/api/servers/delete'):
+                    c.execute('BEGIN IMMEDIATE')
+                    result=deletion.preview(c,s['user_id'],d) if path.endswith('delete-preview') else deletion.commit(c,s['user_id'],d)
+                    c.commit();return self.send(200,result)
                 if path in ('/api/catalogs','/api/organization/preview','/api/organization/commit'):
                     c.execute('BEGIN IMMEDIATE')
                     if path=='/api/catalogs':
