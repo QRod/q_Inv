@@ -11,6 +11,7 @@ from http import cookies
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 from inventory import FIELDS, ValidationError, validate, parse_rvtools, anonymize
+import organization
 from discovery import discover
 from vault import load_key
 from monitoring import Monitor, configure, connection, dashboard
@@ -49,6 +50,7 @@ def init():
         CREATE INDEX IF NOT EXISTS metrics_retention ON metrics(collected_at);
         CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY, user_id INTEGER, action TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP);
         ''')
+        organization.migrate(c)
         has_secrets = bool(c.execute('SELECT 1 FROM server_credentials LIMIT 1').fetchone())
     load_key(KEY_FILE, allow_create=not has_secrets)
 
@@ -94,8 +96,11 @@ class Handler(BaseHTTPRequestHandler):
                 if path == '/api/session':
                     return self.send(200, {'authenticated': bool(s), 'username': s['username'] if s else None, 'csrf': s['csrf'] if s else None})
                 if not s: return self.send(401, {'error':'Inicia sesión'})
-                if path == '/api/servers': return self.send(200, [dict(r) for r in c.execute('SELECT s.*,c.username AS ssh_username,c.port AS ssh_port,c.enabled AS monitoring_enabled,CASE WHEN c.server_id IS NULL THEN 0 ELSE 1 END AS credentials_configured FROM servers s LEFT JOIN server_credentials c ON c.server_id=s.id ORDER BY s.name COLLATE NOCASE')])
-                if path == '/api/dashboard': return self.send(200, dashboard(c))
+                if path == '/api/servers': return self.send(200, organization.hydrate(c,c.execute('SELECT s.*,c.username AS ssh_username,c.port AS ssh_port,c.enabled AS monitoring_enabled,CASE WHEN c.server_id IS NULL THEN 0 ELSE 1 END AS credentials_configured FROM servers s LEFT JOIN server_credentials c ON c.server_id=s.id ORDER BY s.name COLLATE NOCASE').fetchall()))
+                if path == '/api/catalogs': return self.send(200, organization.catalogs(c))
+                if path == '/api/dashboard':
+                    result=dashboard(c);result['servers']=organization.hydrate(c,result['servers'])
+                    return self.send(200, result)
                 if path == '/api/settings': return self.send(200, dict(c.execute('SELECT * FROM settings WHERE id=1').fetchone()))
             return self.send(404, {'error':'No encontrado'})
         files = {'/':'index.html', '/app.js':'app.js', '/style.css':'style.css'}
@@ -146,6 +151,14 @@ class Handler(BaseHTTPRequestHandler):
                     c.commit()
                     return self.send(200, {'token':token,'records':records,'errors':errors})
                 d = json.loads(self.body())
+                if path in ('/api/catalogs','/api/organization/preview','/api/organization/commit'):
+                    c.execute('BEGIN IMMEDIATE')
+                    if path=='/api/catalogs':
+                        result=organization.catalog_command(c,d)
+                        c.execute('INSERT INTO audit(user_id,action) VALUES(?,?)',(s['user_id'],'catalog '+json.dumps({'kind':d['kind'],'id':result['id'],'action':d.get('action','save')})))
+                    elif path=='/api/organization/preview': result=organization.preview_bulk(c,s['user_id'],d)
+                    else: result=organization.commit_bulk(c,s['user_id'],d.get('token'))
+                    c.commit();return self.send(200,result)
                 if path == '/api/discover':
                     if not d.get('password') and d.get('server_id'):
                         saved = connection(c,d['server_id'],KEY_FILE)
@@ -184,10 +197,13 @@ class Handler(BaseHTTPRequestHandler):
                     c.commit()
                     return self.send(200, {'created':created,'updated':updated})
                 if path == '/api/servers':
+                    c.execute('BEGIN IMMEDIATE')
                     data = validate(d)
                     server_id = d.get('id')
                     if server_id is not None and (not isinstance(server_id,int) or not c.execute('SELECT id FROM servers WHERE id=?',(server_id,)).fetchone()): raise ValidationError('Servidor inexistente')
+                    old=c.execute('SELECT * FROM servers WHERE id=?',(server_id,)).fetchone() if server_id is not None else None
                     sid=save_server(c,data,'manual',server_id)
+                    organization.save_classification(c,sid,d,old)
                     configure(c,sid,d.get('ssh'),KEY_FILE)
                     c.execute('INSERT INTO audit(user_id,action) VALUES(?,?)',(s['user_id'],'server: update' if server_id else 'server: create'))
                     c.commit()
@@ -202,6 +218,7 @@ class Handler(BaseHTTPRequestHandler):
                     if MONITOR: MONITOR.wake.set()
                     return self.send(200, {'ok':True})
                 return self.send(404, {'error':'No encontrado'})
+        except organization.OrganizationError as e: self.send(e.status, {'error':str(e)})
         except sqlite3.IntegrityError: self.send(409, {'error':'El UUID ya pertenece a otro servidor'})
         except (ValidationError, json.JSONDecodeError, TypeError, AttributeError) as e: self.send(400, {'error':str(e)})
         except Exception:
