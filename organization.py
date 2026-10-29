@@ -4,6 +4,7 @@ import json
 import secrets
 import time
 import unicodedata
+import audit_log
 from inventory import ValidationError
 
 KINDS = ('groups', 'applications', 'environments', 'owners', 'tags')
@@ -226,5 +227,5 @@ def commit_bulk(c, user_id, token):
         if differs:
             assign(c,row['id'],changes);c.execute('UPDATE servers SET updated_at=CURRENT_TIMESTAMP WHERE id=?',(row['id'],));updated+=1
     c.execute('DELETE FROM bulk_previews WHERE token=?',(token,))
-    c.execute('INSERT INTO audit(user_id,action) VALUES(?,?)',(user_id,'organization.bulk '+json.dumps({'ids':payload['ids'],'changes':changes,'updated':updated})))
+    audit_log.record(c,user_id,'organization.bulk',{'ids':payload['ids'],'changes':changes,'before':[{'id':row['id'],'organization':row['organization']} for row in rows],'updated':updated})
     return {'updated':updated,'selected':len(rows)}

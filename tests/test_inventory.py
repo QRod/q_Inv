@@ -51,7 +51,7 @@ class InventoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             server.DATA=Path(folder);server.KEY_FILE=Path(folder)/'secrets'/'key';server.init()
             salt='00'*16
-            with server.db() as c:c.execute('INSERT INTO users(username,salt,password) VALUES(?,?,?)',('admin',salt,server.password_hash('test-password-123',salt)))
+            with server.db() as c:c.execute("INSERT INTO users(username,salt,password,role) VALUES(?,?,?,'admin')",('admin',salt,server.password_hash('test-password-123',salt)))
             http=server.ThreadingHTTPServer(('127.0.0.1',0),server.Handler)
             thread=threading.Thread(target=http.serve_forever,daemon=True);thread.start()
             base=f'http://127.0.0.1:{http.server_port}/api/'

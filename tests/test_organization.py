@@ -135,7 +135,7 @@ class OrganizationApiTests(unittest.TestCase):
             with tempfile.TemporaryDirectory() as folder:
                 server.DATA=Path(folder)/'data';server.KEY_FILE=Path(folder)/'key';server.init()
                 salt='00'*16
-                with server.db() as c:c.execute('INSERT INTO users(username,salt,password) VALUES(?,?,?)',('qa',salt,server.password_hash('organization-qa',salt)))
+                with server.db() as c:c.execute("INSERT INTO users(username,salt,password,role) VALUES(?,?,?,'admin')",('qa',salt,server.password_hash('organization-qa',salt)))
                 http=server.ThreadingHTTPServer(('127.0.0.1',0),server.Handler);thread=threading.Thread(target=http.serve_forever,daemon=True);thread.start()
                 client=build_opener(HTTPCookieProcessor(CookieJar()));base=f'http://127.0.0.1:{http.server_port}/api/'
                 def request(path,data=None,csrf='',raw=False):

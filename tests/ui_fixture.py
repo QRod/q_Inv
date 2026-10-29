@@ -13,7 +13,7 @@ with tempfile.TemporaryDirectory() as folder:
     server.DATA=Path(folder)/'data'; server.KEY_FILE=Path(folder)/'key';server.init()
     with server.db() as c:
         salt='00'*16
-        c.execute('INSERT INTO users(username,salt,password) VALUES(?,?,?)',('qa',salt,server.password_hash('qa-browser-only',salt)))
+        c.execute("INSERT INTO users(username,salt,password,role) VALUES(?,?,?,'admin')",('qa',salt,server.password_hash('qa-browser-only',salt)))
         catalogs={}
         for kind,names in [('groups',['Infraestructura','Web']),('applications',['Portal']),('owners',['Operaciones']),('tags',['Crítico'])]:
             catalogs[kind]=[org.catalog_command(c,{'kind':kind,'name':name})['id'] for name in names]

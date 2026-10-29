@@ -79,7 +79,7 @@ class DeletionTests(unittest.TestCase):
         finally:monitor.pool.shutdown(wait=True)
     def test_api_auth_csrf_and_delete_flow(self):
         salt='00'*16
-        with server.db() as c:c.execute('INSERT INTO users(username,salt,password) VALUES(?,?,?)',('qa',salt,server.password_hash('deletion-qa-password',salt)))
+        with server.db() as c:c.execute("INSERT INTO users(username,salt,password,role) VALUES(?,?,?,'admin')",('qa',salt,server.password_hash('deletion-qa-password',salt)))
         http=server.ThreadingHTTPServer(('127.0.0.1',0),server.Handler);thread=threading.Thread(target=http.serve_forever,daemon=True);thread.start()
         client=build_opener(HTTPCookieProcessor(CookieJar()));base=f'http://127.0.0.1:{http.server_port}/api/'
         def post(path,data,csrf=''):

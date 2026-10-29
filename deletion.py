@@ -3,6 +3,7 @@ import hashlib
 import json
 import secrets
 import time
+import audit_log
 from organization import OrganizationError, selected_servers, fingerprint
 
 
@@ -40,7 +41,8 @@ def commit(c, user_id, payload):
     ids=json.loads(pending['payload']);rows=selected_servers(c,ids)
     if signature(c,rows)!=pending['signature']:
         raise OrganizationError('Los servidores cambiaron. Revisa la selección de nuevo antes de eliminar.',409)
+    before=[{'id':sid,'state':audit_log.server_state(c,sid)} for sid in ids]
     for sid in ids:c.execute('DELETE FROM servers WHERE id=?',(sid,))
     c.execute('DELETE FROM deletion_previews WHERE token=?',(token,))
-    c.execute('INSERT INTO audit(user_id,action) VALUES(?,?)',(user_id,'servers.delete '+json.dumps({'ids':ids,'deleted':len(ids)})))
+    audit_log.record(c,user_id,'servers.delete',{'ids':ids,'deleted':len(ids),'before':before})
     return {'deleted':len(ids)}
