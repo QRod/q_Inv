@@ -43,6 +43,7 @@ def workbook(raw):
     except Exception: raise ValidationError('Se requiere un archivo .xlsx válido, sin contraseña')
 
 def parse_rvtools(raw):
+    from rvtools_network import vinfo_interfaces,enrich
     book = workbook(raw)
     try:
         sheet_name = next((s for s in book.sheetnames if s.lower() == 'vinfo'), None)
@@ -63,11 +64,16 @@ def parse_rvtools(raw):
                     data[k] = round(n / 1024, 3) if n is not None else None
                 data['kind'] = 'virtual'
                 data = validate(data)
+                interfaces=vinfo_interfaces(headers,row)
+                if interfaces is not None:data['network_interfaces']=interfaces
                 if not data['uuid']: raise ValidationError('Falta VM UUID; se requiere para conciliar sin duplicados')
                 if data['uuid'] in seen: raise ValidationError('UUID repetido en el archivo')
                 seen.add(data['uuid'])
                 result.append({'line': line, 'data': data})
             except ValidationError as e: errors.append({'line': line, 'error': str(e)})
+        enrich(book,result,errors)
+        from network_inventory import all_addresses
+        for item in result:item['data']['ip_addresses']=all_addresses(item['data']['ip'],'',item['data'].get('network_interfaces',[]))
         return result, errors
     finally: book.close()
 

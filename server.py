@@ -16,6 +16,7 @@ import deletion
 import permissions
 import audit_log
 import updates
+import network_inventory
 from discovery import discover
 from vault import load_key
 from monitoring import Monitor, configure, connection, dashboard
@@ -60,6 +61,7 @@ def init():
         organization.migrate(c)
         permissions.migrate(c)
         audit_log.migrate(c)
+        network_inventory.migrate(c)
         has_secrets = bool(c.execute('SELECT 1 FROM server_credentials LIMIT 1').fetchone())
     load_key(KEY_FILE, allow_create=not has_secrets)
 
@@ -129,14 +131,14 @@ class Handler(BaseHTTPRequestHandler):
                 if path=='/api/servers':
                     visible=permissions.visible_ids(c,actor)
                     rows=organization.hydrate(c,c.execute('SELECT s.*,c.username AS ssh_username,c.port AS ssh_port,c.enabled AS monitoring_enabled,CASE WHEN c.server_id IS NULL THEN 0 ELSE 1 END AS credentials_configured FROM servers s LEFT JOIN server_credentials c ON c.server_id=s.id ORDER BY s.name COLLATE NOCASE').fetchall())
-                    rows=[row for row in rows if row['id'] in visible]
+                    rows=network_inventory.hydrate(c,[row for row in rows if row['id'] in visible])
                     if actor['role']=='reader':
                         for row in rows:row.pop('ssh_username',None);row.pop('ssh_port',None)
                     return self.send(200,rows)
                 if path=='/api/catalogs':return self.send(200,permissions.catalogs(c,actor))
                 if path=='/api/dashboard':
                     result=dashboard(c);visible=permissions.visible_ids(c,actor)
-                    result['servers']=organization.hydrate(c,[row for row in result['servers'] if row['id'] in visible]);return self.send(200,result)
+                    result['servers']=network_inventory.hydrate(c,organization.hydrate(c,[row for row in result['servers'] if row['id'] in visible]));return self.send(200,result)
                 permissions.require_admin(actor)
                 if path=='/api/settings':return self.send(200,dict(c.execute('SELECT * FROM settings WHERE id=1').fetchone()))
                 if path=='/api/users':return self.send(200,{'users':[permissions.user_view(c,row) for row in c.execute('SELECT * FROM users ORDER BY username COLLATE NOCASE')]})
@@ -187,7 +189,11 @@ class Handler(BaseHTTPRequestHandler):
                 else:permissions.require_write(actor)
                 if path=='/api/import/preview':
                     records,errors=parse_rvtools(self.body())
-                    for item in records:item['action']='update' if c.execute('SELECT id FROM servers WHERE uuid=?',(item['data']['uuid'],)).fetchone() else 'create'
+                    for item in records:
+                        old=c.execute('SELECT s.id,s.ip,c.server_id AS configured FROM servers s LEFT JOIN server_credentials c ON c.server_id=s.id WHERE s.uuid=?',(item['data']['uuid'],)).fetchone()
+                        item['action']='update' if old else 'create'
+                        item['connection_ip']=old['ip'] if old and old['configured'] else item['data']['ip']
+                        item['connection_ip_preserved']=bool(old and old['configured'] and old['ip']!=item['data']['ip'])
                     token=secrets.token_urlsafe(32);c.execute('DELETE FROM imports WHERE expires<?',(time.time(),))
                     c.execute('INSERT INTO imports VALUES(?,?,?,?)',(token,actor['user_id'],json.dumps({'records':records,'errors':errors}),time.time()+1800))
                     audit_log.record(c,actor,'inventory.import.preview',{'records':len(records),'errors':len(errors)});c.commit()
@@ -253,11 +259,14 @@ class Handler(BaseHTTPRequestHandler):
                     if payload['errors']:raise ValidationError('Corrige las filas inválidas antes de importar')
                     created=updated=0;changes=[]
                     for item in payload['records']:
-                        data=item['data'];old=c.execute('SELECT * FROM servers WHERE uuid=?',(data['uuid'],)).fetchone()
+                        data=item['data'];reported_primary_ip=data['ip'];old=c.execute('SELECT * FROM servers WHERE uuid=?',(data['uuid'],)).fetchone()
                         before=audit_log.server_state(c,old['id']) if old else None
-                        if old:data['group_name'],data['application']=old['group_name'],old['application'];updated+=1
+                        if old:
+                            data['group_name'],data['application']=old['group_name'],old['application'];updated+=1
+                            if c.execute('SELECT 1 FROM server_credentials WHERE server_id=?',(old['id'],)).fetchone():data['ip']=old['ip']
                         else:created+=1
                         sid=save_server(c,data,'rvtools',old['id'] if old else None);configure(c,sid,None,KEY_FILE)
+                        network_inventory.save(c,sid,data.get('network_interfaces'),reported_primary_ip)
                         changes.append({'id':sid,'before':before,'after':audit_log.server_state(c,sid)})
                     c.execute('DELETE FROM imports WHERE token=?',(d['token'],))
                     for offset in range(0,max(1,len(changes)),100):

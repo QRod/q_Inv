@@ -47,6 +47,9 @@ def server_state(c, sid):
     import organization
     state={field:row[field] for field in FIELDS}
     state['organization']=organization.hydrate(c,[{'id':sid}])[0]['organization']
+    import network_inventory
+    network=network_inventory.hydrate(c,[{'id':sid}])[0]
+    state.update(network_interfaces=network['network_interfaces'],reported_primary_ip=network['reported_primary_ip'])
     return state
 
 

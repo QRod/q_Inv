@@ -13,6 +13,8 @@ def signature(c, rows):
         server=dict(c.execute('SELECT * FROM servers WHERE id=?',(row['id'],)).fetchone())
         credentials=c.execute('SELECT revision,username,port,enabled FROM server_credentials WHERE server_id=?',(row['id'],)).fetchone()
         snapshot.append({'server':server,'credentials':dict(credentials) if credentials else None})
+        network=c.execute('SELECT interfaces,reported_primary_ip FROM server_networks WHERE server_id=?',(row['id'],)).fetchone()
+        snapshot.append({'network':dict(network) if network else None})
     snapshot.append({'classification':fingerprint(c,rows,{})})
     return hashlib.sha256(json.dumps(snapshot,sort_keys=True).encode()).hexdigest()
 
