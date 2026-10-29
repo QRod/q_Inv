@@ -1,3 +1,32 @@
+// Theme preference stays in this browser; no account or server settings change.
+const themeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+let themePreference = 'system';
+try { const saved = localStorage.getItem('qinv-theme'); if (['system','light','dark'].includes(saved)) themePreference = saved; } catch (_) {}
+function applyTheme() {
+  const theme = themePreference === 'system' ? (themeMedia.matches ? 'dark' : 'light') : themePreference;
+  document.documentElement.dataset.theme = theme;
+  document.querySelectorAll('[data-theme-select]').forEach(select => select.value = themePreference);
+}
+applyTheme();
+for (const select of document.querySelectorAll('[data-theme-select]')) select.addEventListener('change', () => {
+  themePreference = select.value;
+  try { localStorage.setItem('qinv-theme', themePreference); } catch (_) {}
+  applyTheme();
+});
+themeMedia.addEventListener('change', () => { if (themePreference === 'system') applyTheme(); });
+window.addEventListener('storage', event => {
+  if (event.key === 'qinv-theme' || event.key === null) {
+    themePreference = ['system','light','dark'].includes(event.newValue) ? event.newValue : 'system'; applyTheme();
+  }
+});
+function uiIcon(kind) {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox','0 0 24 24'); svg.setAttribute('aria-hidden','true'); svg.classList.add('ui-icon');
+  const path = document.createElementNS(svg.namespaceURI,'path');
+  path.setAttribute('d', kind === 'refresh' ? 'M20 7v5h-5 M19 12a7 7 0 1 0-2 5 M20 12V5' : 'M6 6l12 12 M18 6L6 18');
+  svg.append(path); return svg;
+}
+for (const button of document.querySelectorAll('.dialog-heading button')) button.replaceChildren(uiIcon('close'));
 const $ = s => document.querySelector(s);
 let csrf = '', servers = [], pending = null, discoveryController = null;
 async function api(path, data, raw = false, signal) {
@@ -7,9 +36,9 @@ async function api(path, data, raw = false, signal) {
   return value;
 }
 function toast(text) { $('#toast').textContent=text; $('#toast').hidden=false; clearTimeout(toast.timer); toast.timer=setTimeout(()=>$('#toast').hidden=true,5500); }
-function showLogin() { $('#workspace').hidden=true; $('#login').hidden=false; servers=[]; pending=null; csrf=''; selectedServers.clear();for(const id of ['server-dialog','catalog-dialog','bulk-dialog','delete-dialog'])$('#'+id).close(); }
+function showLogin() { $('#workspace').hidden=true; $('#login').hidden=false; servers=[]; pending=null; csrf=''; dashboardLastSuccess=null;$('#dashboard-status').hidden=true; selectedServers.clear();for(const id of ['server-dialog','catalog-dialog','bulk-dialog','delete-dialog'])$('#'+id).close(); }
 async function enter(user) { $('#user').textContent=user; $('#login').hidden=true; $('#workspace').hidden=false; await reload(); page('dashboard'); const settings=await api('settings'); for(const k of ['interval_minutes','retention_days']) $('#settings-form').elements[k].value=settings[k]; }
-function page(name) { for (const p of ['dashboard','inventory','organization','import','settings']) $('#'+p+'-page').hidden=p!==name; document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===name)); $('#breadcrumb').textContent={dashboard:'Dashboard',inventory:'Inventario',organization:'Organización',import:'Importar RVTools',settings:'Configuración'}[name]; if(name==='dashboard')loadDashboard().catch(e=>toast(e.message)); }
+function page(name) { for (const p of ['dashboard','inventory','organization','import','settings']) $('#'+p+'-page').hidden=p!==name; document.querySelectorAll('[data-page]').forEach(b=>(b.classList.toggle('active',b.dataset.page===name),b.dataset.page===name?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'))); $('#breadcrumb').textContent={dashboard:'Dashboard',inventory:'Inventario',organization:'Organización',import:'Importar RVTools',settings:'Configuración'}[name]; if(name==='dashboard')loadDashboard().catch(e=>toast(e.message)); }
 async function reload() {
   [servers, inventoryCatalogs] = await Promise.all([api('servers'),api('catalogs')]);
   const existing=new Set(servers.map(s=>s.id));for(const id of selectedServers)if(!existing.has(id))selectedServers.delete(id);
@@ -33,7 +62,7 @@ function render() {
   }
   $('#empty').hidden=filtered.length>0;$('#empty h2').textContent=servers.length?'No hay coincidencias':'Tu infraestructura comienza aquí';$('#empty p').textContent=servers.length?'Prueba con otros filtros de búsqueda.':'Agrega tu primer servidor o importa el inventario desde RVTools.';$('#empty-import').hidden=servers.length>0;$('#filtered-count').textContent=filtered.length;$('#result-label').textContent=filtered.length+' de '+servers.length+' servidores';updateSelection();
 }
-function edit(data={}) { const form=$('#server-form');form.reset();for(const field of form.elements) if(field.name) field.value=data[field.name]??(field.name==='kind'?'virtual':'');$('#ssh-ip').value=data.ip||'';$('#ssh-port').value=data.ssh_port||22;$('#ssh-user').value=data.ssh_username||'';$('#ssh-enabled').checked=data.monitoring_enabled!==0;$('#ssh-password').placeholder=data.credentials_configured?'Guardada: deja vacío para conservar':'Contraseña SSH';$('#credential-status').textContent=data.credentials_configured?'Credencial cifrada guardada. No se muestra la contraseña.':'Las credenciales se guardarán cifradas al guardar el servidor.';$('#ssh-password').value='';$('#discovery-status').replaceChildren();$('#form-title').textContent=data.id?'Editar servidor':'Agregar servidor';$('#form-error').textContent='';setupServerOrganization(data);$('#server-dialog').showModal(); }
+function edit(data={}) { const form=$('#server-form');form.reset();for(const field of form.elements) if(field.name) field.value=data[field.name]??(field.name==='kind'?'virtual':'');$('#ssh-ip').value=data.ip||'';$('#ssh-port').value=data.ssh_port||22;$('#ssh-user').value=data.ssh_username||'';$('#ssh-enabled').checked=data.monitoring_enabled!==0;$('#ssh-password').placeholder=data.credentials_configured?'Guardada: deja vacío para conservar':'Contraseña SSH';$('#credential-status').textContent=data.credentials_configured?'Credencial cifrada guardada. No se muestra la contraseña.':'Las credenciales se guardarán cifradas al guardar el servidor.';$('#ssh-password').value='';$('#discovery-status').replaceChildren();$('#form-title').textContent=data.id?'Editar servidor':'Agregar servidor';$('#form-error').textContent='';setupServerOrganization(data);$('.discovery-panel').open=Boolean(data.credentials_configured);$('#server-dialog').showModal(); }
 $('#login-form').onsubmit=async e=>{e.preventDefault();const button=e.submitter;button.disabled=true;$('#login-error').textContent='';try{const d=Object.fromEntries(new FormData(e.target));const result=await api('login',d);csrf=result.csrf;e.target.reset();await enter(result.username);}catch(err){$('#login-error').textContent=err.message;}finally{button.disabled=false;}};
 $('#logout').onclick=async()=>{try{await api('logout',{});showLogin();}catch(e){toast(e.message);}};
 document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>page(b.dataset.page));$('#go-import').onclick=$('#empty-import').onclick=()=>page('import');$('#add').onclick=()=>edit();$('#close-dialog').onclick=$('#cancel').onclick=()=>$('#server-dialog').close();
@@ -91,8 +120,8 @@ function gauge(label,value,capacity){
 function streamMetric(label,metrics,pairs){const el=node('div','stream-metric');el.append(node('h3','',label));for(const [name,prefix] of pairs){const block=node('div','stream-line');block.append(node('strong','',name+' '+(finite(metrics[prefix+'_bps'])?bytes(metrics[prefix+'_bps'])+'/s':'—')),node('small','',bytes(metrics[prefix+'_bytes'])+' acum.'));el.append(block);}return el;}
 function widget(server){
   const m=server.metrics,card=node('article','server-widget state-'+server.state),head=node('div','widget-head'),identity=node('div','widget-identity');
-  const name=node('h2','',server.name);name.title=server.name;identity.append(node('span','os-mark',String(server.os||'?').startsWith('Windows')?'W':'◈'),name);const refresh=node('button','widget-refresh','↻');refresh.title='Solicitar nueva consulta';refresh.setAttribute('aria-label','Consultar métricas de '+server.name);refresh.disabled=['unconfigured','paused'].includes(server.state);refresh.onclick=async()=>{refresh.disabled=true;try{await api('metrics/refresh',{id:server.id});toast('Consulta solicitada. Los datos aparecerán al finalizar.');setTimeout(()=>loadDashboard().catch(e=>toast(e.message)),4000);}catch(e){toast(e.message);}finally{refresh.disabled=['unconfigured','paused'].includes(server.state);}};head.append(identity,refresh);
-  const meta=node('div','widget-meta');meta.append(node('span','connection-state',stateLabels[server.state]||'Pendiente'),node('span','',finite(m.temperature_c)?'♨ '+compact(m.temperature_c)+' °C':'Temp. —'),node('span','','◷ '+uptime(m.uptime_seconds)),node('span','','Carga '+compact(m.load_1m)));
+  card.dataset.serverId=String(server.id);const name=node('h2','',server.name);name.title=server.name;identity.append(node('span','os-mark',String(server.os||'?').startsWith('Windows')?'WIN':'SYS'),name);const refresh=node('button','widget-refresh','');refresh.append(uiIcon('refresh'));refresh.title='Solicitar nueva consulta';refresh.setAttribute('aria-label','Consultar métricas de '+server.name);refresh.disabled=['unconfigured','paused'].includes(server.state);refresh.onclick=async()=>{refresh.disabled=true;try{await api('metrics/refresh',{id:server.id});toast('Consulta solicitada. Los datos aparecerán al finalizar.');setTimeout(()=>loadDashboard().catch(e=>toast(e.message)),4000);}catch(e){toast(e.message);}finally{refresh.disabled=['unconfigured','paused'].includes(server.state);}};head.append(identity,refresh);
+  const meta=node('div','widget-meta');meta.append(node('span','connection-state',stateLabels[server.state]||'Pendiente'),node('span','',finite(m.temperature_c)?'Temp. '+compact(m.temperature_c)+' °C':'Temp. —'),node('span','','Activo '+uptime(m.uptime_seconds)),node('span','','Carga '+compact(m.load_1m)));
   const resources=node('div','widget-resources');resources.append(gauge('CPU',m.cpu_percent,compact(m.cpu_cores??server.cpu)+' CPU'),gauge('Mem',m.memory_percent,compact(m.ram_total_gb)+' GiB'),gauge('Disco /',m.disk_percent,compact(m.disk_total_gb)+' GiB'),streamMetric('Red',m,[['↑','net_tx'],['↓','net_rx']]),streamMetric('E/S',m,[['L','io_read'],['E','io_write']]));
   const foot=node('div','widget-foot'),details=node('div','');details.append(node('span','',server.ip||'Sin IP'),node('small','',server.collected_at?'Última consulta: '+new Date(server.collected_at*1000).toLocaleString('es-MX'):'Sin consultas realizadas'));const editButton=node('button','widget-edit','Configurar');editButton.onclick=()=>edit(servers.find(s=>s.id===server.id)||server);foot.append(details,editButton);card.append(head,meta,resources);
   if(server.error&&['error','stale'].includes(server.state))card.append(node('p','widget-error',server.error));
@@ -102,12 +131,34 @@ function widget(server){
   const context=[safename(server.environment),names(server.groups),names(server.applications)].filter(Boolean).join(' · ');if(context)card.append(node('p','widget-context',context));card.append(foot);return card;
 }
 function renderDashboard(){
+  const active=document.activeElement, focusedCard=active?.closest('.server-widget');
+  const focusId=focusedCard?.dataset.serverId;
+  const focusAction=active?.classList.contains('widget-refresh')?'.widget-refresh':active?.classList.contains('widget-edit')?'.widget-edit':null;
+
   const all=dashboardData.servers,term=$('#dashboard-search').value.toLowerCase().trim(),state=$('#dashboard-state').value;
   $('#dash-total').textContent=all.length;$('#dash-online').textContent=all.filter(s=>s.state==='online').length;$('#dash-attention').textContent=all.filter(s=>['error','stale'].includes(s.state)).length;$('#dash-pending').textContent=all.filter(s=>!['online','error','stale'].includes(s.state)).length;
   const list=all.filter(s=>(!state||s.state===state)&&(!term||[s.name,s.ip,...classificationSearch(s)].some(v=>String(v||'').toLowerCase().includes(term))));
-  dashboardPage=Math.max(0,Math.min(dashboardPage,Math.ceil(list.length/12)-1));const visible=list.slice(dashboardPage*12,dashboardPage*12+12);$('#server-widgets').replaceChildren(...visible.map(widget));$('#dashboard-empty').hidden=list.length>0;$('#dashboard-results').textContent=list.length?`${dashboardPage*12+1}–${dashboardPage*12+visible.length} de ${list.length} servidores`:'0 servidores';$('#dashboard-prev').disabled=dashboardPage===0;$('#dashboard-next').disabled=(dashboardPage+1)*12>=list.length;$('#dashboard-cadence').textContent=`Recolección cada ${dashboardData.interval_minutes} min · Vista cada 20 s`;
+  dashboardPage=Math.max(0,Math.min(dashboardPage,Math.ceil(list.length/12)-1));const visible=list.slice(dashboardPage*12,dashboardPage*12+12);$('#server-widgets').replaceChildren(...visible.map(widget));$('#dashboard-empty').hidden=list.length>0;
+  $('#dashboard-empty-title').textContent=all.length?'No hay coincidencias':'Tu monitoreo comienza aquí';
+  $('#dashboard-empty-message').textContent=all.length?'Prueba otra búsqueda o limpia los filtros para volver a ver tus servidores.':'Agrega servidores y configura sus credenciales SSH para comenzar a recopilar métricas.';
+  $('#dashboard-clear').hidden=!all.length;
+  if(focusId&&focusAction) {
+    const replacement=[...$('#server-widgets').children].find(card=>card.dataset.serverId===focusId)?.querySelector(focusAction);
+    if(replacement&&!replacement.disabled)replacement.focus({preventScroll:true});
+    else $('#dashboard-search').focus({preventScroll:true});
+  }
+$('#dashboard-results').textContent=list.length?`${dashboardPage*12+1}–${dashboardPage*12+visible.length} de ${list.length} servidores`:'0 servidores';$('#dashboard-prev').disabled=dashboardPage===0;$('#dashboard-next').disabled=(dashboardPage+1)*12>=list.length;$('#dashboard-cadence').textContent=`Recolección cada ${dashboardData.interval_minutes} min · Vista cada 20 s`;
 }
-async function loadDashboard(){if(dashboardLoading||!csrf)return;dashboardLoading=true;try{dashboardData=await api('dashboard');renderDashboard();}finally{dashboardLoading=false;}}
+let dashboardLastSuccess = null;
+async function loadDashboard(){
+  if(dashboardLoading||!csrf)return;dashboardLoading=true;$('#dashboard-page').setAttribute('aria-busy','true');
+  try{dashboardData=await api('dashboard');renderDashboard();dashboardLastSuccess=new Date();$('#dashboard-status').hidden=true;}
+  catch(error){
+    const previous=dashboardLastSuccess?' Última actualización correcta: '+dashboardLastSuccess.toLocaleTimeString('es-MX')+'. Se conservan los datos anteriores.':' Todavía no se pudo cargar el estado de los servidores.';
+    $('#dashboard-status').textContent='No se pudo actualizar la vista.'+previous+' Pulsa Actualizar vista para reintentar.';$('#dashboard-status').hidden=false;throw error;
+  }finally{dashboardLoading=false;$('#dashboard-page').setAttribute('aria-busy','false');}
+}
+$('#dashboard-clear').onclick=()=>{$('#dashboard-search').value='';$('#dashboard-state').value='';dashboardPage=0;renderDashboard();$('#dashboard-search').focus();};
 $('#dashboard-reload').onclick=async()=>{const b=$('#dashboard-reload');b.disabled=true;try{await loadDashboard();}catch(e){toast(e.message);}finally{b.disabled=false;}};
 for(const id of ['dashboard-search','dashboard-state'])$('#'+id).addEventListener('input',()=>{dashboardPage=0;renderDashboard();});
 $('#dashboard-prev').onclick=()=>{dashboardPage--;renderDashboard();};$('#dashboard-next').onclick=()=>{dashboardPage++;renderDashboard();};

@@ -49,3 +49,7 @@ validation/
 backups/
 secrets/
 node_modules/
+
+# Estado local de herramientas de diseño; solo tokens documentados se versionan.
+.impeccable/*
+!.impeccable/design.json

@@ -2,7 +2,7 @@
 
 Inventario web de servidores físicos y virtuales para una VM Linux, dimensionado inicialmente para unos 500 equipos. Todo el proyecto se mantiene dentro de este directorio.
 
-## Primera entrega
+## Funcionalidad actual
 
 - Cuentas locales creadas por el administrador, contraseñas con scrypt y sesiones de 8 horas.
 - Inventario persistente en SQLite: alta, edición, búsqueda y filtros por tipo y grupo.
@@ -26,9 +26,9 @@ El instalador independiente descarga una entrega de GitHub Releases, verifica SH
 Para una IP o nombre de la red local, sustituye `SERVIDOR`:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/QRod/q_Inv/v0.3.1/install.sh -o install.sh
+curl -fsSL https://raw.githubusercontent.com/QRod/q_Inv/v0.4.0/install.sh -o install.sh
 less install.sh
-sudo bash install.sh --version v0.3.1 --address SERVIDOR --https-port 8443
+sudo bash install.sh --version v0.4.0 --address SERVIDOR --https-port 8443
 ```
 
 La CA local genera el certificado en cada instalación; no hay certificados ni claves compartidos. El navegador advertirá de la falta de confianza hasta importar la CA local del proxy en el cliente.
@@ -36,7 +36,7 @@ La CA local genera el certificado en cada instalación; no hay certificados ni c
 Para dominio y certificado público de Let's Encrypt:
 
 ```sh
-sudo bash install.sh --version v0.3.1 --address app.example.com --tls public --https-port 443 --email admin@example.com
+sudo bash install.sh --version v0.4.0 --address app.example.com --tls public --https-port 443 --email admin@example.com
 ```
 
 El DNS debe apuntar al servidor y los puertos 80/443 estar libres y accesibles desde Internet. Caddy gestiona emisión y renovación. Si ya tienes un proxy compartido o esos puertos ocupados, usa `--proxy external` y configura tu proxy HTTPS contra el backend en loopback; el instalador no modifica ese proxy. El firewall permanece bajo administración del operador.
@@ -66,7 +66,7 @@ Para migrar una instalación manual, añade `--migrate-from /ruta/a/la/instalaci
 Para preparar una entrega desde un checkout limpio:
 
 ```sh
-python3 scripts/package_release.py v0.3.1
+python3 scripts/package_release.py v0.4.0
 ```
 
 El resultado y `SHA256SUMS` quedan en `dist/`, excluido del repositorio. Los paquetes se construyen a partir de archivos versionados, sin bases, claves ni entornos locales. La suma protege la integridad de la descarga; su autenticidad depende del repositorio y del canal HTTPS de GitHub.
@@ -199,3 +199,22 @@ git push
 Antes de cada commit, revisa `git diff --cached`. GitHub Actions ejecuta las pruebas automatizadas y verifica la sintaxis JavaScript en cada actualización de `main` y en los pull requests. Subir código a GitHub no despliega cambios automáticamente en Zorin; la instancia se actualiza de forma independiente.
 
 El historial comienza con el estado actual del proyecto. Los cambios anteriores a la incorporación de Git no tienen commits individuales.
+
+## Interfaz y accesibilidad · v0.4.0
+
+- Diseño neutro inspirado en Braun/Nothing, adaptado a una app de infraestructura.
+- Selector Apariencia: Claro, Oscuro o Sistema; se conserva en este navegador.
+- Registro manual visible al abrir el formulario; descubrimiento SSH opcional.
+- Diálogos con nombre accesible, foco conservado al actualizar widgets y controles
+  más legibles. El estado vacío distingue filtros sin coincidencias de un inventario vacío.
+- Aviso persistente cuando falla la actualización del dashboard; conserva los datos
+  previos y permite reintentar.
+
+Pruebas de interfaz adicionales (Chrome y Playwright disponibles):
+
+```sh
+QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-ui.cjs
+```
+
+El rediseño conserva datos y contratos de API; no añade migraciones ni modifica
+usuarios, credenciales, intervalos o retención.

@@ -1,0 +1,716 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-29T04:39:01.614851+00:00",
+  "title": "Design System: q_Inv",
+  "extensions": {
+    "colorMeta": {
+      "light-canvas": {
+        "role": "neutral",
+        "displayName": "light-canvas",
+        "canonical": "#f3f2ee",
+        "tonalRamp": [
+          "oklch(15% 0.0016 95.10)",
+          "oklch(27% 0.0033 95.10)",
+          "oklch(39% 0.0046 95.10)",
+          "oklch(51% 0.0054 95.10)",
+          "oklch(63% 0.0054 95.10)",
+          "oklch(75% 0.0046 95.10)",
+          "oklch(87% 0.0027 95.10)",
+          "oklch(95% 0.0011 95.10)"
+        ]
+      },
+      "light-surface": {
+        "role": "neutral",
+        "displayName": "light-surface",
+        "canonical": "#fff",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(27% 0.0000 89.88)",
+          "oklch(39% 0.0000 89.88)",
+          "oklch(51% 0.0000 89.88)",
+          "oklch(63% 0.0000 89.88)",
+          "oklch(75% 0.0000 89.88)",
+          "oklch(87% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "light-subtle": {
+        "role": "neutral",
+        "displayName": "light-subtle",
+        "canonical": "#eeeee9",
+        "tonalRamp": [
+          "oklch(15% 0.0020 106.53)",
+          "oklch(27% 0.0040 106.53)",
+          "oklch(39% 0.0057 106.53)",
+          "oklch(51% 0.0066 106.53)",
+          "oklch(63% 0.0066 106.53)",
+          "oklch(75% 0.0057 106.53)",
+          "oklch(87% 0.0033 106.53)",
+          "oklch(95% 0.0013 106.53)"
+        ]
+      },
+      "light-text": {
+        "role": "neutral",
+        "displayName": "light-text",
+        "canonical": "#202321",
+        "tonalRamp": [
+          "oklch(15% 0.0017 156.79)",
+          "oklch(27% 0.0035 156.79)",
+          "oklch(39% 0.0049 156.79)",
+          "oklch(51% 0.0058 156.79)",
+          "oklch(63% 0.0058 156.79)",
+          "oklch(75% 0.0049 156.79)",
+          "oklch(87% 0.0029 156.79)",
+          "oklch(95% 0.0012 156.79)"
+        ]
+      },
+      "light-muted": {
+        "role": "neutral",
+        "displayName": "light-muted",
+        "canonical": "#535b55",
+        "tonalRamp": [
+          "oklch(15% 0.0042 153.36)",
+          "oklch(27% 0.0083 153.36)",
+          "oklch(39% 0.0118 153.36)",
+          "oklch(51% 0.0139 153.36)",
+          "oklch(63% 0.0139 153.36)",
+          "oklch(75% 0.0118 153.36)",
+          "oklch(87% 0.0069 153.36)",
+          "oklch(95% 0.0028 153.36)"
+        ]
+      },
+      "light-border": {
+        "role": "neutral",
+        "displayName": "light-border",
+        "canonical": "#c8cdc6",
+        "tonalRamp": [
+          "oklch(15% 0.0033 136.57)",
+          "oklch(27% 0.0066 136.57)",
+          "oklch(39% 0.0094 136.57)",
+          "oklch(51% 0.0110 136.57)",
+          "oklch(63% 0.0110 136.57)",
+          "oklch(75% 0.0094 136.57)",
+          "oklch(87% 0.0055 136.57)",
+          "oklch(95% 0.0022 136.57)"
+        ]
+      },
+      "light-control": {
+        "role": "neutral",
+        "displayName": "light-control",
+        "canonical": "#fff",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(27% 0.0000 89.88)",
+          "oklch(39% 0.0000 89.88)",
+          "oklch(51% 0.0000 89.88)",
+          "oklch(63% 0.0000 89.88)",
+          "oklch(75% 0.0000 89.88)",
+          "oklch(87% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "light-hover": {
+        "role": "neutral",
+        "displayName": "light-hover",
+        "canonical": "#e8ebe5",
+        "tonalRamp": [
+          "oklch(15% 0.0026 128.56)",
+          "oklch(27% 0.0052 128.56)",
+          "oklch(39% 0.0073 128.56)",
+          "oklch(51% 0.0086 128.56)",
+          "oklch(63% 0.0086 128.56)",
+          "oklch(75% 0.0073 128.56)",
+          "oklch(87% 0.0043 128.56)",
+          "oklch(95% 0.0017 128.56)"
+        ]
+      },
+      "light-accent": {
+        "role": "primary",
+        "displayName": "light-accent",
+        "canonical": "#242824",
+        "tonalRamp": [
+          "oklch(15% 0.0028 145.31)",
+          "oklch(27% 0.0056 145.31)",
+          "oklch(39% 0.0079 145.31)",
+          "oklch(51% 0.0093 145.31)",
+          "oklch(63% 0.0093 145.31)",
+          "oklch(75% 0.0079 145.31)",
+          "oklch(87% 0.0046 145.31)",
+          "oklch(95% 0.0019 145.31)"
+        ]
+      },
+      "light-on-accent": {
+        "role": "primary",
+        "displayName": "light-on-accent",
+        "canonical": "#fff",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(27% 0.0000 89.88)",
+          "oklch(39% 0.0000 89.88)",
+          "oklch(51% 0.0000 89.88)",
+          "oklch(63% 0.0000 89.88)",
+          "oklch(75% 0.0000 89.88)",
+          "oklch(87% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "light-focus": {
+        "role": "neutral",
+        "displayName": "light-focus",
+        "canonical": "#255dbb",
+        "tonalRamp": [
+          "oklch(15% 0.0479 260.22)",
+          "oklch(27% 0.0958 260.22)",
+          "oklch(39% 0.1358 260.22)",
+          "oklch(51% 0.1597 260.22)",
+          "oklch(63% 0.1597 260.22)",
+          "oklch(75% 0.1358 260.22)",
+          "oklch(87% 0.0799 260.22)",
+          "oklch(95% 0.0319 260.22)"
+        ]
+      },
+      "light-positive": {
+        "role": "neutral",
+        "displayName": "light-positive",
+        "canonical": "#17673b",
+        "tonalRamp": [
+          "oklch(15% 0.0311 154.07)",
+          "oklch(27% 0.0622 154.07)",
+          "oklch(39% 0.0882 154.07)",
+          "oklch(51% 0.1037 154.07)",
+          "oklch(63% 0.1037 154.07)",
+          "oklch(75% 0.0882 154.07)",
+          "oklch(87% 0.0519 154.07)",
+          "oklch(95% 0.0207 154.07)"
+        ]
+      },
+      "light-warning": {
+        "role": "neutral",
+        "displayName": "light-warning",
+        "canonical": "#785000",
+        "tonalRamp": [
+          "oklch(15% 0.0293 75.72)",
+          "oklch(27% 0.0585 75.72)",
+          "oklch(39% 0.0829 75.72)",
+          "oklch(51% 0.0976 75.72)",
+          "oklch(63% 0.0976 75.72)",
+          "oklch(75% 0.0829 75.72)",
+          "oklch(87% 0.0488 75.72)",
+          "oklch(95% 0.0195 75.72)"
+        ]
+      },
+      "light-danger": {
+        "role": "neutral",
+        "displayName": "light-danger",
+        "canonical": "#a32524",
+        "tonalRamp": [
+          "oklch(15% 0.0488 26.42)",
+          "oklch(27% 0.0976 26.42)",
+          "oklch(39% 0.1382 26.42)",
+          "oklch(51% 0.1626 26.42)",
+          "oklch(63% 0.1626 26.42)",
+          "oklch(75% 0.1382 26.42)",
+          "oklch(87% 0.0813 26.42)",
+          "oklch(95% 0.0325 26.42)"
+        ]
+      },
+      "light-positive-bg": {
+        "role": "neutral",
+        "displayName": "light-positive-bg",
+        "canonical": "#e5f2e9",
+        "tonalRamp": [
+          "oklch(15% 0.0055 155.81)",
+          "oklch(27% 0.0109 155.81)",
+          "oklch(39% 0.0155 155.81)",
+          "oklch(51% 0.0182 155.81)",
+          "oklch(63% 0.0182 155.81)",
+          "oklch(75% 0.0155 155.81)",
+          "oklch(87% 0.0091 155.81)",
+          "oklch(95% 0.0036 155.81)"
+        ]
+      },
+      "light-warning-bg": {
+        "role": "neutral",
+        "displayName": "light-warning-bg",
+        "canonical": "#fff0cd",
+        "tonalRamp": [
+          "oklch(15% 0.0145 87.57)",
+          "oklch(27% 0.0290 87.57)",
+          "oklch(39% 0.0411 87.57)",
+          "oklch(51% 0.0483 87.57)",
+          "oklch(63% 0.0483 87.57)",
+          "oklch(75% 0.0411 87.57)",
+          "oklch(87% 0.0242 87.57)",
+          "oklch(95% 0.0097 87.57)"
+        ]
+      },
+      "light-danger-bg": {
+        "role": "neutral",
+        "displayName": "light-danger-bg",
+        "canonical": "#fff0ed",
+        "tonalRamp": [
+          "oklch(15% 0.0050 31.08)",
+          "oklch(27% 0.0101 31.08)",
+          "oklch(39% 0.0143 31.08)",
+          "oklch(51% 0.0168 31.08)",
+          "oklch(63% 0.0168 31.08)",
+          "oklch(75% 0.0143 31.08)",
+          "oklch(87% 0.0084 31.08)",
+          "oklch(95% 0.0034 31.08)"
+        ]
+      },
+      "light-track": {
+        "role": "neutral",
+        "displayName": "light-track",
+        "canonical": "#d7dfd6",
+        "tonalRamp": [
+          "oklch(15% 0.0045 142.22)",
+          "oklch(27% 0.0089 142.22)",
+          "oklch(39% 0.0126 142.22)",
+          "oklch(51% 0.0149 142.22)",
+          "oklch(63% 0.0149 142.22)",
+          "oklch(75% 0.0126 142.22)",
+          "oklch(87% 0.0074 142.22)",
+          "oklch(95% 0.0030 142.22)"
+        ]
+      },
+      "dark-canvas": {
+        "role": "neutral",
+        "displayName": "dark-canvas",
+        "canonical": "#141715",
+        "tonalRamp": [
+          "oklch(15% 0.0018 156.63)",
+          "oklch(27% 0.0037 156.63)",
+          "oklch(39% 0.0052 156.63)",
+          "oklch(51% 0.0061 156.63)",
+          "oklch(63% 0.0061 156.63)",
+          "oklch(75% 0.0052 156.63)",
+          "oklch(87% 0.0030 156.63)",
+          "oklch(95% 0.0012 156.63)"
+        ]
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "dark-surface",
+        "canonical": "#1d211e",
+        "tonalRamp": [
+          "oklch(15% 0.0024 153.29)",
+          "oklch(27% 0.0049 153.29)",
+          "oklch(39% 0.0069 153.29)",
+          "oklch(51% 0.0081 153.29)",
+          "oklch(63% 0.0081 153.29)",
+          "oklch(75% 0.0069 153.29)",
+          "oklch(87% 0.0041 153.29)",
+          "oklch(95% 0.0016 153.29)"
+        ]
+      },
+      "dark-subtle": {
+        "role": "neutral",
+        "displayName": "dark-subtle",
+        "canonical": "#272d28",
+        "tonalRamp": [
+          "oklch(15% 0.0037 150.22)",
+          "oklch(27% 0.0074 150.22)",
+          "oklch(39% 0.0105 150.22)",
+          "oklch(51% 0.0123 150.22)",
+          "oklch(63% 0.0123 150.22)",
+          "oklch(75% 0.0105 150.22)",
+          "oklch(87% 0.0062 150.22)",
+          "oklch(95% 0.0025 150.22)"
+        ]
+      },
+      "dark-text": {
+        "role": "neutral",
+        "displayName": "dark-text",
+        "canonical": "#f0f1eb",
+        "tonalRamp": [
+          "oklch(15% 0.0024 114.22)",
+          "oklch(27% 0.0048 114.22)",
+          "oklch(39% 0.0068 114.22)",
+          "oklch(51% 0.0080 114.22)",
+          "oklch(63% 0.0080 114.22)",
+          "oklch(75% 0.0068 114.22)",
+          "oklch(87% 0.0040 114.22)",
+          "oklch(95% 0.0016 114.22)"
+        ]
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "dark-muted",
+        "canonical": "#b4bdb4",
+        "tonalRamp": [
+          "oklch(15% 0.0048 145.42)",
+          "oklch(27% 0.0096 145.42)",
+          "oklch(39% 0.0136 145.42)",
+          "oklch(51% 0.0160 145.42)",
+          "oklch(63% 0.0160 145.42)",
+          "oklch(75% 0.0136 145.42)",
+          "oklch(87% 0.0080 145.42)",
+          "oklch(95% 0.0032 145.42)"
+        ]
+      },
+      "dark-border": {
+        "role": "neutral",
+        "displayName": "dark-border",
+        "canonical": "#4b554c",
+        "tonalRamp": [
+          "oklch(15% 0.0058 148.09)",
+          "oklch(27% 0.0116 148.09)",
+          "oklch(39% 0.0164 148.09)",
+          "oklch(51% 0.0193 148.09)",
+          "oklch(63% 0.0193 148.09)",
+          "oklch(75% 0.0164 148.09)",
+          "oklch(87% 0.0096 148.09)",
+          "oklch(95% 0.0039 148.09)"
+        ]
+      },
+      "dark-control": {
+        "role": "neutral",
+        "displayName": "dark-control",
+        "canonical": "#1d211e",
+        "tonalRamp": [
+          "oklch(15% 0.0024 153.29)",
+          "oklch(27% 0.0049 153.29)",
+          "oklch(39% 0.0069 153.29)",
+          "oklch(51% 0.0081 153.29)",
+          "oklch(63% 0.0081 153.29)",
+          "oklch(75% 0.0069 153.29)",
+          "oklch(87% 0.0041 153.29)",
+          "oklch(95% 0.0016 153.29)"
+        ]
+      },
+      "dark-hover": {
+        "role": "neutral",
+        "displayName": "dark-hover",
+        "canonical": "#333d34",
+        "tonalRamp": [
+          "oklch(15% 0.0061 147.92)",
+          "oklch(27% 0.0122 147.92)",
+          "oklch(39% 0.0173 147.92)",
+          "oklch(51% 0.0204 147.92)",
+          "oklch(63% 0.0204 147.92)",
+          "oklch(75% 0.0173 147.92)",
+          "oklch(87% 0.0102 147.92)",
+          "oklch(95% 0.0041 147.92)"
+        ]
+      },
+      "dark-accent": {
+        "role": "primary",
+        "displayName": "dark-accent",
+        "canonical": "#eceee7",
+        "tonalRamp": [
+          "oklch(15% 0.0029 119.58)",
+          "oklch(27% 0.0057 119.58)",
+          "oklch(39% 0.0081 119.58)",
+          "oklch(51% 0.0095 119.58)",
+          "oklch(63% 0.0095 119.58)",
+          "oklch(75% 0.0081 119.58)",
+          "oklch(87% 0.0048 119.58)",
+          "oklch(95% 0.0019 119.58)"
+        ]
+      },
+      "dark-on-accent": {
+        "role": "primary",
+        "displayName": "dark-on-accent",
+        "canonical": "#1b211c",
+        "tonalRamp": [
+          "oklch(15% 0.0039 150.06)",
+          "oklch(27% 0.0077 150.06)",
+          "oklch(39% 0.0109 150.06)",
+          "oklch(51% 0.0129 150.06)",
+          "oklch(63% 0.0129 150.06)",
+          "oklch(75% 0.0109 150.06)",
+          "oklch(87% 0.0064 150.06)",
+          "oklch(95% 0.0026 150.06)"
+        ]
+      },
+      "dark-focus": {
+        "role": "neutral",
+        "displayName": "dark-focus",
+        "canonical": "#9abfff",
+        "tonalRamp": [
+          "oklch(15% 0.0299 261.13)",
+          "oklch(27% 0.0599 261.13)",
+          "oklch(39% 0.0848 261.13)",
+          "oklch(51% 0.0998 261.13)",
+          "oklch(63% 0.0998 261.13)",
+          "oklch(75% 0.0848 261.13)",
+          "oklch(87% 0.0499 261.13)",
+          "oklch(95% 0.0200 261.13)"
+        ]
+      },
+      "dark-positive": {
+        "role": "neutral",
+        "displayName": "dark-positive",
+        "canonical": "#87dba4",
+        "tonalRamp": [
+          "oklch(15% 0.0340 154.43)",
+          "oklch(27% 0.0681 154.43)",
+          "oklch(39% 0.0964 154.43)",
+          "oklch(51% 0.1134 154.43)",
+          "oklch(63% 0.1134 154.43)",
+          "oklch(75% 0.0964 154.43)",
+          "oklch(87% 0.0567 154.43)",
+          "oklch(95% 0.0227 154.43)"
+        ]
+      },
+      "dark-warning": {
+        "role": "neutral",
+        "displayName": "dark-warning",
+        "canonical": "#f1cd79",
+        "tonalRamp": [
+          "oklch(15% 0.0333 86.88)",
+          "oklch(27% 0.0665 86.88)",
+          "oklch(39% 0.0943 86.88)",
+          "oklch(51% 0.1109 86.88)",
+          "oklch(63% 0.1109 86.88)",
+          "oklch(75% 0.0943 86.88)",
+          "oklch(87% 0.0555 86.88)",
+          "oklch(95% 0.0222 86.88)"
+        ]
+      },
+      "dark-danger": {
+        "role": "neutral",
+        "displayName": "dark-danger",
+        "canonical": "#ffafa6",
+        "tonalRamp": [
+          "oklch(15% 0.0286 26.42)",
+          "oklch(27% 0.0573 26.42)",
+          "oklch(39% 0.0811 26.42)",
+          "oklch(51% 0.0954 26.42)",
+          "oklch(63% 0.0954 26.42)",
+          "oklch(75% 0.0811 26.42)",
+          "oklch(87% 0.0477 26.42)",
+          "oklch(95% 0.0191 26.42)"
+        ]
+      },
+      "dark-positive-bg": {
+        "role": "neutral",
+        "displayName": "dark-positive-bg",
+        "canonical": "#183423",
+        "tonalRamp": [
+          "oklch(15% 0.0139 155.58)",
+          "oklch(27% 0.0278 155.58)",
+          "oklch(39% 0.0395 155.58)",
+          "oklch(51% 0.0464 155.58)",
+          "oklch(63% 0.0464 155.58)",
+          "oklch(75% 0.0395 155.58)",
+          "oklch(87% 0.0232 155.58)",
+          "oklch(95% 0.0093 155.58)"
+        ]
+      },
+      "dark-warning-bg": {
+        "role": "neutral",
+        "displayName": "dark-warning-bg",
+        "canonical": "#3b301a",
+        "tonalRamp": [
+          "oklch(15% 0.0116 83.74)",
+          "oklch(27% 0.0232 83.74)",
+          "oklch(39% 0.0328 83.74)",
+          "oklch(51% 0.0386 83.74)",
+          "oklch(63% 0.0386 83.74)",
+          "oklch(75% 0.0328 83.74)",
+          "oklch(87% 0.0193 83.74)",
+          "oklch(95% 0.0077 83.74)"
+        ]
+      },
+      "dark-danger-bg": {
+        "role": "neutral",
+        "displayName": "dark-danger-bg",
+        "canonical": "#3d2421",
+        "tonalRamp": [
+          "oklch(15% 0.0117 27.15)",
+          "oklch(27% 0.0234 27.15)",
+          "oklch(39% 0.0331 27.15)",
+          "oklch(51% 0.0389 27.15)",
+          "oklch(63% 0.0389 27.15)",
+          "oklch(75% 0.0331 27.15)",
+          "oklch(87% 0.0195 27.15)",
+          "oklch(95% 0.0078 27.15)"
+        ]
+      },
+      "dark-track": {
+        "role": "neutral",
+        "displayName": "dark-track",
+        "canonical": "#3e4b41",
+        "tonalRamp": [
+          "oklch(15% 0.0071 152.14)",
+          "oklch(27% 0.0141 152.14)",
+          "oklch(39% 0.0200 152.14)",
+          "oklch(51% 0.0235 152.14)",
+          "oklch(63% 0.0235 152.14)",
+          "oklch(75% 0.0200 152.14)",
+          "oklch(87% 0.0118 152.14)",
+          "oklch(95% 0.0047 152.14)"
+        ]
+      },
+      "brand-dot": {
+        "role": "primary",
+        "displayName": "brand-dot",
+        "canonical": "#c3352b",
+        "tonalRamp": [
+          "oklch(15% 0.0541 28.60)",
+          "oklch(27% 0.1083 28.60)",
+          "oklch(39% 0.1534 28.60)",
+          "oklch(51% 0.1805 28.60)",
+          "oklch(63% 0.1805 28.60)",
+          "oklch(75% 0.1534 28.60)",
+          "oklch(87% 0.0902 28.60)",
+          "oklch(95% 0.0361 28.60)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "headline",
+        "purpose": "Jerarquía operativa extraída de static/style.css."
+      },
+      "title": {
+        "displayName": "title",
+        "purpose": "Jerarquía operativa extraída de static/style.css."
+      },
+      "body": {
+        "displayName": "body",
+        "purpose": "Jerarquía operativa extraída de static/style.css."
+      },
+      "label": {
+        "displayName": "label",
+        "purpose": "Jerarquía operativa extraída de static/style.css."
+      },
+      "metric": {
+        "displayName": "metric",
+        "purpose": "Jerarquía operativa extraída de static/style.css."
+      }
+    },
+    "shadows": [
+      {
+        "name": "dialog-light",
+        "value": "0 18px 54px rgb(0 0 0 / 20%)",
+        "purpose": "Aislar diálogo en tema claro."
+      },
+      {
+        "name": "dialog-dark",
+        "value": "0 18px 54px rgb(0 0 0 / 45%)",
+        "purpose": "Aislar diálogo en tema oscuro."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button-background",
+        "value": "background .16s ease-out",
+        "purpose": "Respuesta de botón; transition:none con prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact-tools",
+        "value": "1180px"
+      },
+      {
+        "name": "top-navigation",
+        "value": "850px"
+      },
+      {
+        "name": "single-column",
+        "value": "600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Guardar servidor",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Guardar servidor de la implementación operativa.",
+      "html": "<button class=\"ds-button-primary\">Guardar servidor</button>",
+      "css": ".ds-button-primary{font-family:var(--ds-font,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);font-size:14px;background:var(--accent,#242824);color:var(--on-accent,#fff);border:1px solid var(--accent,#242824);border-radius:6px;min-height:40px;padding:9px 14px;font-weight:600;cursor:pointer;transition:background .16s ease-out}.ds-button-primary:hover{filter:brightness(.9)}.ds-button-primary:focus-visible{outline:3px solid var(--focus,#255dbb);outline-offset:3px}.ds-button-primary:disabled{opacity:.55;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-button-primary{transition:none}}"
+    },
+    {
+      "name": "Cancelar",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Cancelar de la implementación operativa.",
+      "html": "<button class=\"ds-button-secondary\">Cancelar</button>",
+      "css": ".ds-button-secondary{font-family:var(--ds-font,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);font-size:14px;background:var(--control,#fff);color:var(--text,#202321);border:1px solid var(--border,#c8cdc6);border-radius:6px;min-height:40px;padding:9px 14px;font-weight:600;cursor:pointer;transition:background .16s ease-out}.ds-button-secondary:hover{background:var(--hover,#e8ebe5)}.ds-button-secondary:focus-visible{outline:3px solid var(--focus,#255dbb);outline-offset:3px}.ds-button-secondary:disabled{opacity:.55;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-button-secondary{transition:none}}"
+    },
+    {
+      "name": "Eliminar definitivamente",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Eliminar definitivamente de la implementación operativa.",
+      "html": "<button class=\"ds-button-danger\">Eliminar definitivamente</button>",
+      "css": ".ds-button-danger{font-family:var(--ds-font,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);font-size:14px;background:var(--danger-bg,#fff0ed);color:var(--danger,#a32524);border:1px solid var(--danger,#a32524);border-radius:6px;min-height:40px;padding:9px 14px;font-weight:600;cursor:pointer;transition:background .16s ease-out}.ds-button-danger:hover{background:var(--hover,#e8ebe5)}.ds-button-danger:focus-visible{outline:3px solid var(--focus,#255dbb);outline-offset:3px}.ds-button-danger:disabled{opacity:.55;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-button-danger{transition:none}}"
+    },
+    {
+      "name": "Buscar servidor",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Buscar servidor de la implementación operativa.",
+      "html": "<label class=\"ds-field-label\">Buscar servidor<input class=\"ds-field\" placeholder=\"Nombre o grupo\"></label>",
+      "css": ".ds-field-label{font-family:var(--ds-font,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);font-size:14px;display:grid;gap:8px;color:var(--text,#202321)}.ds-field{font-family:var(--ds-font,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);font-size:14px;min-height:42px;min-width:0;padding:10px 11px;border:1px solid var(--border,#c8cdc6);border-radius:5px;background:var(--control,#fff);color:var(--text,#202321)}.ds-field::placeholder{color:var(--muted,#535b55);opacity:1}.ds-field:focus-visible{outline:3px solid var(--focus,#255dbb);outline-offset:3px}"
+    },
+    {
+      "name": "Etiqueta",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Etiqueta de la implementación operativa.",
+      "html": "<span class=\"ds-badge\">Crítico</span>",
+      "css": ".ds-badge{font-family:var(--ds-font,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);font-size:14px;display:inline-block;font-size:12px;font-weight:500;padding:3px 7px;border-radius:4px;background:var(--subtle,#eeeee9);color:var(--text,#202321)}"
+    },
+    {
+      "name": "Navegación activa",
+      "kind": "nav",
+      "refersTo": "navigation-active",
+      "description": "Navegación activa de la implementación operativa.",
+      "html": "<button class=\"ds-nav\" aria-current=\"page\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3 4h18v6H3z M3 14h18v6H3z M6 7h.01 M6 17h.01\"/></svg>Inventario</button>",
+      "css": ".ds-nav{font-family:var(--ds-font,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);font-size:14px;display:flex;align-items:center;gap:11px;padding:12px;border:0;border-radius:6px;min-height:40px;background:var(--subtle,#eeeee9);color:var(--text,#202321);font-weight:700;cursor:pointer}.ds-nav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.ds-nav:hover{background:var(--hover,#e8ebe5)}.ds-nav:focus-visible{outline:3px solid var(--focus,#255dbb);outline-offset:3px}"
+    },
+    {
+      "name": "Widget de servidor",
+      "kind": "card",
+      "refersTo": "server-widget",
+      "description": "Widget de servidor de la implementación operativa.",
+      "html": "<article class=\"ds-widget\"><h2>Servidor de ejemplo</h2><p class=\"ds-state\">Conectado</p><p class=\"ds-metric\">CPU 0 % · Mem 40 %</p><p class=\"ds-context\">Capacidades y mediciones diferenciadas</p></article>",
+      "css": ".ds-widget{font-family:var(--ds-font,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);font-size:14px;background:var(--surface,#fff);color:var(--text,#202321);border:1px solid var(--border,#c8cdc6);border-radius:12px;padding:22px}.ds-widget h2{font-size:18px;margin:0}.ds-state{color:var(--positive,#17673b);font-size:12px;font-weight:650;border-bottom:1px solid var(--border,#c8cdc6);padding-bottom:16px}.ds-state:before{content:\"\";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px}.ds-metric{font-variant-numeric:tabular-nums}.ds-context{font-size:12px;color:var(--muted,#535b55)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Instrumentación operativa",
+    "overview": "q_Inv interpreta las referencias Braun/Nothing autorizadas mediante superficies cálidas o carbón, divisores finos, tinta legible y controles familiares. La densidad sirve al trabajo diario de infraestructura y a la comparación de datos; el español y la lectura precisa son compromisos duraderos.\n\nEl sistema documenta la implementación final en HTML/CSS/JavaScript. La dirección Operate se construyó directamente en código, sin comp raster ni seed: esa omisión está declarada en el contrato de dirección y no equivale a una aprobación de assets inexistentes.",
+    "keyCharacteristics": [
+      "Superficies planas con contraste tonal.",
+      "Cifras tabulares y estados escritos.",
+      "Tema claro, oscuro o del sistema.",
+      "Controles reconocibles y foco visible."
+    ],
+    "rules": [
+      {
+        "name": "The Semantic Color Rule",
+        "body": "El color de estado acompaña una etiqueta o un valor; no sustituye el significado textual.",
+        "section": "colors"
+      },
+      {
+        "name": "The Operational Type Rule",
+        "body": "La sans del sistema es tipografía de trabajo; las métricas usan cifras tabulares, sin introducir una fuente display decorativa.",
+        "section": "typography"
+      },
+      {
+        "name": "The Modal Depth Rule",
+        "body": "La sombra aísla una tarea modal; las tarjetas permanecen planas y se separan con borde y tono.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do conservar los pares semánticos de cada tema y el foco visible.",
+      "Do mostrar unidades, capacidades y métricas como conceptos distintos.",
+      "Do representar ausencia con raya y texto explicativo; cero sigue siendo una medición válida.",
+      "Do mantener etiquetas accesibles en iconos de acción y confirmación en operaciones masivas."
+    ],
+    "donts": [
+      "Don't usar un error SSH como prueba de que el servidor está apagado.",
+      "Don't convertir tarjetas en capas de sombras decorativas.",
+      "Don't reemplazar los iconos SVG de acción por glifos o depender solo del color.",
+      "Don't guardar la preferencia de apariencia como configuración del servidor."
+    ]
+  }
+}
