@@ -58,6 +58,10 @@ typography:
   label:
     fontFamily: "-apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
     fontSize: "13px"
+  compact-resource:
+    fontSize: "20px"
+    fontWeight: 650
+    lineHeight: 1.1
   metric:
     fontFamily: "-apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
     fontSize: "30px"
@@ -74,7 +78,7 @@ spacing:
   action-gap: "10px"
   metric-gap: "12px"
   section-gap: "20px"
-  card-inset: "22px"
+  card-inset: "12px"
   dialog-inset: "28px"
   page-inset: "32px"
 components:
@@ -112,8 +116,8 @@ components:
   server-widget:
     backgroundColor: "{colors.light-surface}"
     textColor: "{colors.light-text}"
-    rounded: "{rounded.dialog-widget}"
-    padding: "22px"
+    rounded: "{rounded.table}"
+    padding: "12px"
 ---
 
 # Design System: q_Inv
@@ -155,7 +159,7 @@ El selector ofrece Claro, Oscuro y Sistema en acceso y espacio de trabajo. `qinv
 
 **Body Font:** sans del sistema definida en el frontmatter; no se descarga una fuente externa.
 
-La jerarquía operativa usa títulos compactos, etiquetas legibles y números tabulares en tablas, resúmenes y recursos. El titular de página se reduce a 25 px en móvil. Los títulos de widget usan 18 px; diálogo 21 px (20 px en móvil); cuerpo de tabla y etiquetas 13 px; texto auxiliar y badges 12 px. El resumen usa 30 px. Acceso tiene una excepción de 36 px, reducida a 32 px en móvil. El logotipo es texto de 28 px y peso 750, no un estilo de titular reutilizable. La marca técnica de SO conserva 10 px como abreviatura auxiliar, sin albergar datos esenciales.
+La jerarquía operativa usa títulos compactos, etiquetas legibles y números tabulares en tablas, resúmenes y recursos. El titular de página se reduce a 25 px en móvil. Los títulos de widget usan 14 px; diálogo 21 px (20 px en móvil); cuerpo de tabla y etiquetas 13 px; texto auxiliar y badges 12 px. El resumen usa 30 px. Acceso tiene una excepción de 36 px, reducida a 32 px en móvil. El logotipo es texto de 28 px y peso 750, no un estilo de titular reutilizable. La marca técnica de SO conserva 10 px como abreviatura auxiliar, sin albergar datos esenciales.
 
 Los párrafos tienen interlineado 1.6; los detalles operativos suelen usar 1.5. La descripción de página limita su ancho a 65ch y los vacíos a 55ch. Los pesos 600–700 distinguen acciones y encabezados; no hay escala tipográfica de marketing.
 
@@ -163,7 +167,7 @@ Los párrafos tienen interlineado 1.6; los detalles operativos suelen usar 1.5. 
 
 ## Layout
 
-En escritorio la navegación fija mide 218 px; el contenido compensa ese ancho. Cabecera mínima de 76 px; contenido con 34 px verticales y 32 px laterales. El resumen es una banda de cuatro columnas con divisores. Widgets: rejilla auto-fit con mínimo de 490 px limitado al ancho disponible y separación de 20 px; recursos en tres columnas más dos de 1.15fr. Formularios de diálogo: dos columnas, separación de 20 px.
+En escritorio la navegación fija mide 218 px; el contenido compensa ese ancho. Cabecera mínima de 76 px; contenido con 34 px verticales y 32 px laterales. El resumen es una banda de cuatro columnas con divisores. Widgets: rejilla auto-fill con mínimo de 250 px limitado al ancho disponible y separación de 12 px. Cuatro columnas en un escritorio de 1440 px; una columna en móvil. CPU/RAM/disco usan porcentajes y barras; red/E/S muestran tasas compactas. Se muestran hasta 48 equipos por página.
 
 A 1180 px se apilan título/acciones, herramientas y barra de selección; filtros organizativos pasan a dos columnas. A 850 px la navegación deja de ser fija, envuelve arriba y el resumen pasa a dos columnas; los laterales del contenido son 22 px. A 600 px los laterales son 18 px, los formularios y filtros organizativos pasan a una columna y red/E/S bajan bajo los tres indicadores. Las acciones se envuelven; los botones de diálogo comparten ancho y su franja queda sticky.
 
@@ -177,7 +181,7 @@ Las superficies de reposo son planas: fondo, borde fino y tono organizan la info
 
 ## Shapes
 
-Geometría funcional con bordes de 1 px: esquinas discretas en campos y botones, más amplias en contenedores y diálogos, según frontmatter. Los puntos de estado son círculos de 6 px y la firma del logotipo de 7 px. Los badges son rectángulos suaves, no cápsulas. Los indicadores circulares SVG usan viewBox de 100, radio 40 y trazo 7; su progreso tiene extremo redondo. La importación distingue su zona mediante borde discontinuo.
+Geometría funcional con bordes de 1 px: esquinas discretas en campos y botones, más amplias en contenedores y diálogos, según frontmatter. Los puntos de estado son círculos de 6 px y la firma del logotipo de 7 px. Los badges son rectángulos suaves, no cápsulas. Los indicadores de recursos son barras SVG horizontales con viewBox 100 × 4 y extremos de 2 px; el porcentaje permanece como texto legible de 20 px.
 
 ## Components
 
@@ -199,7 +203,7 @@ Badges y tipo de servidor usan fondo `subtle`, texto `text` y esquinas pequeñas
 
 ### Cards / Containers
 
-Tablas y ajustes comparten superficie, borde fino y ninguna sombra. Widgets usan mayor radio y 22 px de relleno (18 px en móvil); identidad arriba, estado y metadatos después, recursos, contexto y pie dividido por línea. Ausencia, error y datos antiguos son estados explícitos. Los indicadores incluyen `role=img` y nombre con porcentaje o sin datos; red y E/S muestran tasas y acumulados por separado.
+Tablas y ajustes comparten superficie y borde fino, sin sombra. Widgets compactos con radio de 8 px y relleno de 12 px; nombre y estado/IP, tres recursos, tasas de red/E/S y acciones en una línea. «Detalles» conserva temperatura, actividad, carga, acumulados, error completo, contexto y fecha de consulta. La apertura y el foco se conservan durante el refresco. Los indicadores incluyen role=img y nombre con porcentaje o sin datos. Medición de referencia a 1440 px: aproximadamente el 25 % del área de la tarjeta de v0.4.0; en móvil se prioriza legibilidad.
 
 ### Dialogs and feedback
 

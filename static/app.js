@@ -112,33 +112,50 @@ function compact(value){return finite(value)?new Intl.NumberFormat('es-MX',{maxi
 function bytes(value){if(!finite(value))return '—';const units=['B','KiB','MiB','GiB','TiB'];let i=0;while(value>=1024&&i<4){value/=1024;i++;}return compact(value)+' '+units[i];}
 function uptime(value){if(!finite(value))return '—';const days=Math.floor(value/86400),hours=Math.floor(value%86400/3600),minutes=Math.floor(value%3600/60);return days?`${days}d ${hours}h`:`${hours}h ${minutes}m`;}
 function gauge(label,value,capacity){
-  const wrapper=node('div','gauge'+(!finite(value)?' unavailable':value>=90?' danger':value>=75?' warning':''));wrapper.append(node('h3','',label));
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('role','img');svg.setAttribute('aria-label',label+': '+(finite(value)?value+'%':'sin datos'));
-  for(const cls of ['gauge-track','gauge-value']){const circle=document.createElementNS(svg.namespaceURI,'circle');for(const [key,v] of Object.entries({cx:50,cy:50,r:40,pathLength:100,class:cls}))circle.setAttribute(key,v);if(cls==='gauge-value'){circle.setAttribute('stroke-dasharray',`${finite(value)?Math.max(0,Math.min(100,value)):0} 100`);circle.setAttribute('stroke-opacity',finite(value)&&value>0?'1':'0');}svg.append(circle);}
-  const text=document.createElementNS(svg.namespaceURI,'text');text.setAttribute('x','50');text.setAttribute('y','55');text.textContent=finite(value)?compact(value)+'%':'—';svg.append(text);wrapper.append(svg,node('p','capacity',capacity));return wrapper;
+  const wrapper=node('div','gauge'+(!finite(value)?' unavailable':value>=90?' danger':value>=75?' warning':''));
+  wrapper.append(node('h3','',label),node('p','resource-value',finite(value)?compact(value)+'%':'—'));
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 100 4');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('role','img');svg.setAttribute('aria-label',label+': '+(finite(value)?value+'%':'sin datos'));
+  for(const cls of ['gauge-track','gauge-value']){const bar=document.createElementNS(svg.namespaceURI,'rect');bar.setAttribute('width',cls==='gauge-track'?'100':String(finite(value)?Math.max(0,Math.min(100,value)):0));bar.setAttribute('height','4');bar.setAttribute('rx','2');bar.setAttribute('class',cls);svg.append(bar);}
+  wrapper.append(svg,node('p','capacity',capacity));return wrapper;
+}
+function compactStream(label,metrics,pairs){
+  const section=node('div','compact-stream');section.append(node('span','',label));
+  const values=node('div','compact-stream-values');
+  for(const [direction,key] of pairs)values.append(node('span','',direction+' '+(finite(metrics[key+'_bps'])?bytes(metrics[key+'_bps'])+'/s':'—')));
+  section.append(values);return section;
 }
 function streamMetric(label,metrics,pairs){const el=node('div','stream-metric');el.append(node('h3','',label));for(const [name,prefix] of pairs){const block=node('div','stream-line');block.append(node('strong','',name+' '+(finite(metrics[prefix+'_bps'])?bytes(metrics[prefix+'_bps'])+'/s':'—')),node('small','',bytes(metrics[prefix+'_bytes'])+' acum.'));el.append(block);}return el;}
 function widget(server){
   const m=server.metrics,card=node('article','server-widget state-'+server.state),head=node('div','widget-head'),identity=node('div','widget-identity');
   card.dataset.serverId=String(server.id);const name=node('h2','',server.name);name.title=server.name;identity.append(node('span','os-mark',String(server.os||'?').startsWith('Windows')?'WIN':'SYS'),name);const refresh=node('button','widget-refresh','');refresh.append(uiIcon('refresh'));refresh.title='Solicitar nueva consulta';refresh.setAttribute('aria-label','Consultar métricas de '+server.name);refresh.disabled=['unconfigured','paused'].includes(server.state);refresh.onclick=async()=>{refresh.disabled=true;try{await api('metrics/refresh',{id:server.id});toast('Consulta solicitada. Los datos aparecerán al finalizar.');setTimeout(()=>loadDashboard().catch(e=>toast(e.message)),4000);}catch(e){toast(e.message);}finally{refresh.disabled=['unconfigured','paused'].includes(server.state);}};head.append(identity,refresh);
-  const meta=node('div','widget-meta');meta.append(node('span','connection-state',stateLabels[server.state]||'Pendiente'),node('span','',finite(m.temperature_c)?'Temp. '+compact(m.temperature_c)+' °C':'Temp. —'),node('span','','Activo '+uptime(m.uptime_seconds)),node('span','','Carga '+compact(m.load_1m)));
-  const resources=node('div','widget-resources');resources.append(gauge('CPU',m.cpu_percent,compact(m.cpu_cores??server.cpu)+' CPU'),gauge('Mem',m.memory_percent,compact(m.ram_total_gb)+' GiB'),gauge('Disco /',m.disk_percent,compact(m.disk_total_gb)+' GiB'),streamMetric('Red',m,[['↑','net_tx'],['↓','net_rx']]),streamMetric('E/S',m,[['L','io_read'],['E','io_write']]));
-  const foot=node('div','widget-foot'),details=node('div','');details.append(node('span','',server.ip||'Sin IP'),node('small','',server.collected_at?'Última consulta: '+new Date(server.collected_at*1000).toLocaleString('es-MX'):'Sin consultas realizadas'));const editButton=node('button','widget-edit','Configurar');editButton.onclick=()=>edit(servers.find(s=>s.id===server.id)||server);foot.append(details,editButton);card.append(head,meta,resources);
-  if(server.error&&['error','stale'].includes(server.state))card.append(node('p','widget-error',server.error));
-  if(server.state==='unconfigured')card.append(node('p','widget-hint','Configura usuario y contraseña SSH para comenzar.'));
-  if(server.state==='pending')card.append(node('p','widget-hint','Esperando la primera consulta del recolector.'));
-  if(server.state==='paused')card.append(node('p','widget-hint','La recolección está pausada.'));
-  const context=[safename(server.environment),names(server.groups),names(server.applications)].filter(Boolean).join(' · ');if(context)card.append(node('p','widget-context',context));card.append(foot);return card;
+  const meta=node('div','widget-meta');meta.append(node('span','connection-state',stateLabels[server.state]||'Pendiente'),node('span','widget-ip',server.ip||'Sin IP'));
+  const resources=node('div','widget-resources');resources.append(gauge('CPU',m.cpu_percent,compact(m.cpu_cores??server.cpu)+' CPU'),gauge('RAM',m.memory_percent,compact(m.ram_total_gb)+' GiB'),gauge('Disco /',m.disk_percent,compact(m.disk_total_gb)+' GiB'));
+  const streams=node('div','compact-streams');streams.append(compactStream('Red',m,[['↑','net_tx'],['↓','net_rx']]),compactStream('E/S',m,[['L','io_read'],['E','io_write']]));
+  const foot=node('div','widget-foot'),timestamp=node('small','widget-timestamp',server.collected_at?'Consulta '+new Date(server.collected_at*1000).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:false}):'Sin consultas');
+  timestamp.title=server.collected_at?'Última consulta: '+new Date(server.collected_at*1000).toLocaleString('es-MX'):'Sin consultas realizadas';
+  const editButton=node('button','widget-edit','Configurar');editButton.onclick=()=>edit(servers.find(s=>s.id===server.id)||server);foot.append(timestamp,editButton);
+  const details=node('details','widget-details');details.append(node('summary','','Detalles'));const content=node('div','widget-details-content');details.append(content);
+  content.append(node('p','',timestamp.title),node('p','',`Temperatura: ${finite(m.temperature_c)?compact(m.temperature_c)+' °C':'—'} · Actividad: ${uptime(m.uptime_seconds)} · Carga: ${compact(m.load_1m)}`));
+  const expandedStreams=node('div','widget-expanded-streams');expandedStreams.append(streamMetric('Red',m,[['↑','net_tx'],['↓','net_rx']]),streamMetric('E/S',m,[['L','io_read'],['E','io_write']]));content.append(expandedStreams);
+  foot.replaceChildren(details,editButton);meta.title=timestamp.title;card.append(head,meta,resources,streams,foot);
+  if(server.error&&['error','stale'].includes(server.state))content.append(node('p','widget-error',server.error));
+  if(server.state==='unconfigured')content.append(node('p','widget-hint','Configura usuario y contraseña SSH para comenzar.'));
+  if(server.state==='pending')content.append(node('p','widget-hint','Esperando la primera consulta del recolector.'));
+  if(server.state==='paused')content.append(node('p','widget-hint','La recolección está pausada.'));
+  const context=[safename(server.environment),names(server.groups),names(server.applications)].filter(Boolean).join(' · ');if(context)content.append(node('p','widget-context',context));return card;
 }
+const dashboardPageSize=48;
 function renderDashboard(){
+  const expanded=new Set([...$('#server-widgets').querySelectorAll('.widget-details[open]')].map(details=>details.closest('.server-widget').dataset.serverId));
   const active=document.activeElement, focusedCard=active?.closest('.server-widget');
   const focusId=focusedCard?.dataset.serverId;
-  const focusAction=active?.classList.contains('widget-refresh')?'.widget-refresh':active?.classList.contains('widget-edit')?'.widget-edit':null;
+  const focusAction=active?.classList.contains('widget-refresh')?'.widget-refresh':active?.classList.contains('widget-edit')?'.widget-edit':active?.matches('.widget-details>summary')?'.widget-details>summary':null;
 
   const all=dashboardData.servers,term=$('#dashboard-search').value.toLowerCase().trim(),state=$('#dashboard-state').value;
   $('#dash-total').textContent=all.length;$('#dash-online').textContent=all.filter(s=>s.state==='online').length;$('#dash-attention').textContent=all.filter(s=>['error','stale'].includes(s.state)).length;$('#dash-pending').textContent=all.filter(s=>!['online','error','stale'].includes(s.state)).length;
   const list=all.filter(s=>(!state||s.state===state)&&(!term||[s.name,s.ip,...classificationSearch(s)].some(v=>String(v||'').toLowerCase().includes(term))));
-  dashboardPage=Math.max(0,Math.min(dashboardPage,Math.ceil(list.length/12)-1));const visible=list.slice(dashboardPage*12,dashboardPage*12+12);$('#server-widgets').replaceChildren(...visible.map(widget));$('#dashboard-empty').hidden=list.length>0;
+  dashboardPage=Math.max(0,Math.min(dashboardPage,Math.ceil(list.length/dashboardPageSize)-1));const visible=list.slice(dashboardPage*dashboardPageSize,dashboardPage*dashboardPageSize+dashboardPageSize);$('#server-widgets').replaceChildren(...visible.map(widget));$('#dashboard-empty').hidden=list.length>0;
+  for(const card of $('#server-widgets').children)if(expanded.has(card.dataset.serverId))card.querySelector('.widget-details').open=true;
   $('#dashboard-empty-title').textContent=all.length?'No hay coincidencias':'Tu monitoreo comienza aquí';
   $('#dashboard-empty-message').textContent=all.length?'Prueba otra búsqueda o limpia los filtros para volver a ver tus servidores.':'Agrega servidores y configura sus credenciales SSH para comenzar a recopilar métricas.';
   $('#dashboard-clear').hidden=!all.length;
@@ -147,7 +164,7 @@ function renderDashboard(){
     if(replacement&&!replacement.disabled)replacement.focus({preventScroll:true});
     else $('#dashboard-search').focus({preventScroll:true});
   }
-$('#dashboard-results').textContent=list.length?`${dashboardPage*12+1}–${dashboardPage*12+visible.length} de ${list.length} servidores`:'0 servidores';$('#dashboard-prev').disabled=dashboardPage===0;$('#dashboard-next').disabled=(dashboardPage+1)*12>=list.length;$('#dashboard-cadence').textContent=`Recolección cada ${dashboardData.interval_minutes} min · Vista cada 20 s`;
+$('#dashboard-results').textContent=list.length?`${dashboardPage*dashboardPageSize+1}–${dashboardPage*dashboardPageSize+visible.length} de ${list.length} servidores`:'0 servidores';$('#dashboard-prev').disabled=dashboardPage===0;$('#dashboard-next').disabled=(dashboardPage+1)*dashboardPageSize>=list.length;$('#dashboard-cadence').textContent=`Recolección cada ${dashboardData.interval_minutes} min · Vista cada 20 s`;
 }
 let dashboardLastSuccess = null;
 async function loadDashboard(){

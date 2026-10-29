@@ -669,9 +669,9 @@
       "name": "Widget de servidor",
       "kind": "card",
       "refersTo": "server-widget",
-      "description": "Widget de servidor de la implementación operativa.",
+      "description": "Tarjeta compacta: métricas principales y tasas visibles; metadatos y acumulados en Detalles.",
       "html": "<article class=\"ds-widget\"><h2>Servidor de ejemplo</h2><p class=\"ds-state\">Conectado</p><p class=\"ds-metric\">CPU 0 % · Mem 40 %</p><p class=\"ds-context\">Capacidades y mediciones diferenciadas</p></article>",
-      "css": ".ds-widget{font-family:var(--ds-font,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);font-size:14px;background:var(--surface,#fff);color:var(--text,#202321);border:1px solid var(--border,#c8cdc6);border-radius:12px;padding:22px}.ds-widget h2{font-size:18px;margin:0}.ds-state{color:var(--positive,#17673b);font-size:12px;font-weight:650;border-bottom:1px solid var(--border,#c8cdc6);padding-bottom:16px}.ds-state:before{content:\"\";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px}.ds-metric{font-variant-numeric:tabular-nums}.ds-context{font-size:12px;color:var(--muted,#535b55)}"
+      "css": ".ds-widget{font-family:var(--ds-font,-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif);font-size:14px;background:var(--surface,#fff);color:var(--text,#202321);border:1px solid var(--border,#c8cdc6);border-radius:8px;padding:12px}.ds-widget h2{font-size:14px;margin:0}.ds-state{color:var(--positive,#17673b);font-size:12px;font-weight:650;border-bottom:1px solid var(--border,#c8cdc6);padding-bottom:16px}.ds-state:before{content:\"\";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px}.ds-metric{font-variant-numeric:tabular-nums}.ds-context{font-size:12px;color:var(--muted,#535b55)}"
     }
   ],
   "narrative": {
@@ -711,6 +711,7 @@
       "Don't convertir tarjetas en capas de sombras decorativas.",
       "Don't reemplazar los iconos SVG de acción por glifos o depender solo del color.",
       "Don't guardar la preferencia de apariencia como configuración del servidor."
-    ]
+    ],
+    "compactDashboard": "Tarjetas de 250 px mínimos, separación y relleno de 12 px, radio de 8 px; porcentajes de 20 px y barras horizontales. Detalles expandibles persistentes durante el refresco. 48 equipos por página."
   }
 }

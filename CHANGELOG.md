@@ -1,5 +1,12 @@
 # Cambios
 
+## v0.4.1 — 2026-10-28
+
+- Tarjetas del dashboard compactas, de aproximadamente un cuarto del área anterior
+  en escritorio, con porcentajes y barras de recursos legibles.
+- Red y E/S resumidas; acumulados, metadatos y mensajes completos accesibles en Detalles.
+- Hasta 48 servidores por página y conservación de detalles abiertos al refrescar.
+
 ## v0.4.0 — 2026-10-28
 
 ### Añadido
