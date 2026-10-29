@@ -98,3 +98,7 @@ dialog{width:760px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 40px);o
 [data-role=reader] .selection-bar{display:none}
 
 #toast{width:max-content;pointer-events:none}#audit-rows td{vertical-align:top}
+
+/* Imported network inventory keeps dense tables readable. */
+.network-details{margin-top:8px;min-width:0;max-width:360px;white-space:normal;overflow-wrap:anywhere}.network-details>summary{cursor:pointer;padding:6px 0;font-size:13px;line-height:1.5}.network-list{list-style:none;padding:0;margin:8px 0}.network-list>li{padding:10px 0;border-top:1px solid var(--border);overflow-wrap:anywhere}.network-list p{margin:4px 0;font-size:13px;line-height:1.5}.network-primary{font-size:13px}.server-network{margin:24px 0}.server-network .network-details{max-width:none}.server-network>p{max-width:65ch}#preview-rows .network-details{min-width:180px}#servers td:has(.network-details){white-space:normal;min-width:180px;vertical-align:top}
+#servers .network-details[open],#preview-rows .network-details[open]{min-width:280px}#servers tr:has(.network-details[open])>td,#preview-rows td{vertical-align:top}

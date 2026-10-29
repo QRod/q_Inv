@@ -234,3 +234,7 @@ falta de autorizaciones de una búsqueda sin resultados. La auditoría muestra a
 en español y conserva sus identificadores técnicos, resultados y detalle expandible.
 Los comandos de operación se presentan como texto de solo lectura, nunca como un
 botón de ejecución privilegiada.
+
+## Inventario de red
+
+Las tarjetas e IPs importadas se consultan en detalles expandibles dentro del inventario y de la vista previa. La edición conserva una sección de consulta de red separada del campo de IP principal de conexión. Las listas usan texto ajustable, divisores y los tokens existentes. La expansión conserva su estado al filtrar y refrescar; la búsqueda considera direcciones secundarias, redes y MAC. No se añaden acentos ni controles de conexión por cada IP.
