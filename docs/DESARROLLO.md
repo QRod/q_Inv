@@ -33,6 +33,7 @@ Importar `examples/RVTools-demo.xlsx` desde la interfaz. El libro es completamen
 .venv/bin/python -m unittest discover -s tests -v
 node --check static/app.js
 node --check static/history.js
+node --check static/insights.js
 bash -n install.sh
 ```
 
@@ -45,6 +46,7 @@ QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-compact.cjs
 QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-enterprise.cjs
 QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-network.cjs
 QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-history.cjs
+QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-widgets.cjs
 ```
 
 `QINV_CHROME` permite seleccionar el ejecutable de Chrome. GitHub Actions ejecuta las pruebas de Python, verifica la sintaxis JavaScript y shell y comprueba el empaquetado. Los resultados no sustituyen la validación de conexiones con cada sistema operativo remoto.
@@ -54,7 +56,7 @@ QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-history.cjs
 Desde un checkout limpio y con la versión correspondiente en `VERSION`:
 
 ```sh
-python3 scripts/package_release.py v0.7.0
+python3 scripts/package_release.py v0.8.0
 ```
 
 El artefacto y `SHA256SUMS` se generan en `dist/`. El paquete incluye únicamente archivos versionados y excluye datos, claves, entornos virtuales y resultados locales. La autenticidad de la descarga depende del repositorio oficial y de HTTPS; la suma comprueba su integridad.

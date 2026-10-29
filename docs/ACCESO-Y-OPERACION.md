@@ -5,6 +5,7 @@
 | Operación | Administrador | Operador | Lector |
 |---|---|---|---|
 | Consultar inventario y métricas | Todos | Sus grupos | Sus grupos |
+| Personalizar su propio dashboard | Sí | Sí | Sí |
 | Alta y edición de servidores | Sí | Dentro de sus grupos | No |
 | Descubrimiento y consulta SSH | Sí | Servidores guardados de sus grupos | No |
 | Organización masiva | Sí | Selección íntegra dentro de su ámbito | No |

@@ -30,7 +30,8 @@ Aplicación web autohospedada en Linux con systemd y Python 3.11+. Acceso median
 - Ficha de servidor con estado, inventario y gráficas de recursos históricos; rangos, promedios, máximos y periodos sin datos explícitos.
 - Auditoría de acciones y resultados, sin secretos, exclusiva de administradores.
 - Consulta manual de versiones con comandos de respaldo y actualización; la instalación se realiza desde el sistema operativo.
-- Active Directory, alertas, widgets personalizables y recolector Windows no están integrados.
+- Dashboard personalizable por cuenta: SO, soporte estándar con fuentes, cobertura, presión reciente, capacidad asignada por aplicación y calidad del inventario.
+- Active Directory, alertas, predicción de capacidad y recolector Windows no están integrados.
 
 ## Brand Commitments
 

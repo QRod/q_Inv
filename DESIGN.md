@@ -242,3 +242,9 @@ Las tarjetas e IPs importadas se consultan en detalles expandibles dentro del in
 ## Ficha e historial
 
 Los nombres de tarjetas son enlaces subrayados y accesibles. La ficha usa la navegación y superficies existentes, con el estado registrado, inventario y gráficas SVG locales. Ejes y leyendas mantienen unidades, promedios y máximos; las curvas se interrumpen sin muestras válidas. El cursor de muestra es un control nativo de rango con teclado, acompañado por valores y una tabla. Las gráficas ajustan su viewBox al ancho real para conservar la lectura en móvil. Los colores y patrones de trazo reutilizan los tokens existentes.
+
+## Widgets de análisis
+
+La sección de análisis usa dos columnas en escritorio y una por debajo de 850 px. Cada widget conserva superficie, borde y tokens semánticos del tema; títulos de 17 px y relleno de 22 px, reducido a 18 px en móvil. Los recuentos son botones con etiqueta textual, cifras tabulares y foco visible que abren el inventario relacionado. Las fuentes y versiones se consultan en detalles expandibles con desplazamiento local; el refresco conserva expansión, posición y foco.
+
+Personalizar usa diálogo nativo, checkboxes y botones Subir/Bajar accesibles para ordenar sin arrastre. Las preferencias son por cuenta y sus filtros afectan análisis, resúmenes y tarjetas. El soporte desconocido permanece neutral y se escribe Por verificar. La capacidad asignada conserva separados los recursos físicos y virtuales.

@@ -8,6 +8,8 @@ El botón de tema alterna entre claro y oscuro, con preferencia guardada en el n
 
 Al pulsar el nombre de una tarjeta se abre la [ficha e historial](HISTORIAL.md), con estado registrado, inventario y gráficas interactivas de recursos.
 
+**Personalizar** permite elegir y ordenar widgets, ajustar filtros y umbrales y mostrar u ocultar tarjetas. Las preferencias pertenecen a cada cuenta. Consulta [Widgets y soporte](WIDGETS.md) para interpretar los indicadores.
+
 ## Importar desde RVTools
 
 Una cuenta administradora puede cargar un archivo `.xlsx` desde **Importar RVTools** y pulsar **Validar y previsualizar**. La hoja `vInfo` debe contener el nombre de la VM y un UUID; se admiten hasta 20 MB y 10 000 filas. Las filas inválidas bloquean la confirmación. La vista previa expira a los 30 minutos.
