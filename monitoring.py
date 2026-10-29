@@ -105,13 +105,13 @@ def connection(c, server_id, key_path):
     return {'ip':row['ip'], 'port':row['port'], 'username':row['username'], 'password':decrypt(row['secret'],key_path)}
 
 
-def dashboard(c):
+def dashboard(c,server_id=None):
     interval = c.execute('SELECT interval_minutes FROM settings WHERE id=1').fetchone()[0]
     rows = c.execute('''SELECT s.id,s.name,s.ip,s.os,s.cpu,s.ram_gb,s.disk_gb,s.group_name,s.application,
         c.enabled,c.server_id AS configured,m.collected_at,m.status,m.error,m.payload
         FROM servers s LEFT JOIN server_credentials c ON c.server_id=s.id
         LEFT JOIN metrics m ON m.id=(SELECT id FROM metrics WHERE server_id=s.id ORDER BY id DESC LIMIT 1)
-        ORDER BY s.name COLLATE NOCASE''').fetchall()
+        '''+(' WHERE s.id=?' if server_id is not None else '')+' ORDER BY s.name COLLATE NOCASE',(server_id,) if server_id is not None else ()).fetchall()
     result=[]
     for row in rows:
         item=dict(row)

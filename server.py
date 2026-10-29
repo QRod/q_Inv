@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import secrets
+import re
 import sqlite3
 import time
 from http import cookies
@@ -17,6 +18,7 @@ import permissions
 import audit_log
 import updates
 import network_inventory
+import history
 from discovery import discover
 from vault import load_key
 from monitoring import Monitor, configure, connection, dashboard
@@ -56,6 +58,7 @@ def init():
         CREATE TABLE IF NOT EXISTS metrics(id INTEGER PRIMARY KEY, server_id INTEGER NOT NULL REFERENCES servers(id) ON DELETE CASCADE, collected_at REAL NOT NULL, status TEXT NOT NULL, error TEXT, payload TEXT NOT NULL);
         CREATE INDEX IF NOT EXISTS metrics_latest ON metrics(server_id,id DESC);
         CREATE INDEX IF NOT EXISTS metrics_retention ON metrics(collected_at);
+        CREATE INDEX IF NOT EXISTS metrics_server_time ON metrics(server_id,collected_at,id);
         CREATE TABLE IF NOT EXISTS audit(id INTEGER PRIMARY KEY, user_id INTEGER, action TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP);
         ''')
         organization.migrate(c)
@@ -116,10 +119,10 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path=urlparse(self.path).path;actor=None;self.request_identity=None
         if not path.startswith('/api/'):
-            files={'/':'index.html','/app.js':'app.js','/style.css':'style.css'}
+            files={'/':'index.html','/app.js':'app.js','/history.js':'history.js','/style.css':'style.css'}
             if path not in files:return self.send(404,{'error':'No encontrado'})
             raw=(ROOT/'static'/files[path]).read_bytes();self.send_response(200)
-            self.send_header('Content-Type',{'/':'text/html; charset=utf-8','/app.js':'text/javascript; charset=utf-8','/style.css':'text/css; charset=utf-8'}[path])
+            self.send_header('Content-Type',{'/':'text/html; charset=utf-8','/app.js':'text/javascript; charset=utf-8','/history.js':'text/javascript; charset=utf-8','/style.css':'text/css; charset=utf-8'}[path])
             self.send_header('Content-Length',str(len(raw)));self.send_header('Cache-Control','no-store');self.send_header('X-Content-Type-Options','nosniff')
             self.send_header('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
             self.end_headers();self.wfile.write(raw);return
@@ -135,6 +138,13 @@ class Handler(BaseHTTPRequestHandler):
                     if actor['role']=='reader':
                         for row in rows:row.pop('ssh_username',None);row.pop('ssh_port',None)
                     return self.send(200,rows)
+                match=re.fullmatch(r'/api/servers/([1-9][0-9]*)(/history)?',path)
+                if match:
+                    sid=int(match[1]);permissions.require_server(c,actor,sid)
+                    if match[2]:return self.send(200,history.read(c,sid,parse_qs(urlparse(self.path).query,keep_blank_values=True)))
+                    row=c.execute('SELECT * FROM servers WHERE id=?',(sid,)).fetchone()
+                    detail=network_inventory.hydrate(c,organization.hydrate(c,[row]))[0]
+                    return self.send(200,{'server':detail,'current':dashboard(c,sid)['servers'][0]})
                 if path=='/api/catalogs':return self.send(200,permissions.catalogs(c,actor))
                 if path=='/api/dashboard':
                     result=dashboard(c);visible=permissions.visible_ids(c,actor)
