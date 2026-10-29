@@ -15,6 +15,7 @@ args=parser.parse_args()
 if not re.fullmatch(r'v\d+\.\d+\.\d+',args.version):parser.error('Use vX.Y.Z')
 root=Path(__file__).resolve().parents[1]
 app='q-inv' if (root/'inventory.py').exists() else 'q-kanbant'
+if (root/'VERSION').exists() and (root/'VERSION').read_text().strip()!=args.version:raise SystemExit('VERSION no coincide con la entrega solicitada')
 files=[v.decode() for v in subprocess.check_output(['git','ls-files','-z'],cwd=root).split(b'\0') if v]
 for name in files:
  if any(p in {'.git','.data','data','secrets','.venv','node_modules','validation','backups','dist','__pycache__'} for p in Path(name).parts):raise SystemExit('Runtime file tracked: '+name)

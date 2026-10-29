@@ -1,5 +1,22 @@
 # Cambios
 
+## v0.5.0 — 2026-10-29
+
+- Roles de administrador, operador y lector; visibilidad y modificación por grupos,
+  verificadas en el backend y al confirmar operaciones masivas.
+- Gestión de usuarios, permisos y contraseñas; desactivación y revocación de sesiones.
+- Protección del último administrador activo y migración de cuentas anteriores
+  conservando su acceso administrador.
+- Auditoría estructurada, paginada y consultable; cambios antes/después sin secretos.
+- Búsqueda manual de actualizaciones estables con guía de comandos; sin ejecución web.
+- Respaldo privado y consistente mediante la consola administrativa.
+- Paramiko 5.1.0 y política SSH moderna; los servidores antiguos requieren piloto
+  y podrían necesitar actualización de su configuración SSH.
+
+La base agrega roles, autorizaciones y campos de auditoría. Las credenciales,
+cuentas, inventario, organización, configuración y métricas se conservan. Ver la guía
+[Acceso y operación](docs/ACCESO-Y-OPERACION.md) antes de migrar o restaurar.
+
 ## v0.4.1 — 2026-10-28
 
 - Tarjetas del dashboard compactas, de aproximadamente un cuarto del área anterior

@@ -33,6 +33,12 @@ ambas configurables. Las alertas se integrarán posteriormente.
 - El error SSH no demuestra que un equipo esté apagado.
 - No alterar datos del servidor desplegado durante pruebas de diseño.
 - Mantener HTML/CSS/JavaScript y backend Python existentes.
+- Administrador con acceso completo; operador modifica sus grupos y lector solo consulta.
+- Servidores sin grupo exclusivos de administradores; las cuentas anteriores migran
+  como administradoras para preservar acceso. Los cambios de cuenta revocan sesiones.
+- Auditoría de cambios sin secretos, visible para administradores.
+- Consultar publicaciones estables desde la app y guiar el respaldo/actualización por
+  un administrador del sistema. No instalar ni ejecutar comandos desde la web.
 
 ## Brand Commitments
 
@@ -55,3 +61,9 @@ CPU, RAM, disco, red y E/S disponibles. No existen testimonios ni cifras comerci
 2. Explicar efectos y confirmar operaciones destructivas o masivas.
 3. Priorizar lectura, navegación por teclado y estados comprensibles.
 4. Conservar tareas y contexto ante actualizaciones o fallos de conexión.
+
+## Política de conexión confirmada
+
+El usuario eligió Paramiko 5.1 y algoritmos SSH modernos, con validación de los
+sistemas antiguos durante el piloto. No reintroducir algoritmos obsoletos para
+recuperar compatibilidad sin una nueva decisión explícita.
