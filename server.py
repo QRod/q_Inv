@@ -19,6 +19,7 @@ import audit_log
 import updates
 import network_inventory
 import history
+import dashboard_widgets
 from discovery import discover
 from vault import load_key
 from monitoring import Monitor, configure, connection, dashboard
@@ -65,6 +66,7 @@ def init():
         permissions.migrate(c)
         audit_log.migrate(c)
         network_inventory.migrate(c)
+        dashboard_widgets.migrate(c)
         has_secrets = bool(c.execute('SELECT 1 FROM server_credentials LIMIT 1').fetchone())
     load_key(KEY_FILE, allow_create=not has_secrets)
 
@@ -119,10 +121,10 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path=urlparse(self.path).path;actor=None;self.request_identity=None
         if not path.startswith('/api/'):
-            files={'/':'index.html','/app.js':'app.js','/history.js':'history.js','/style.css':'style.css'}
+            files={'/':'index.html','/app.js':'app.js','/history.js':'history.js','/insights.js':'insights.js','/style.css':'style.css'}
             if path not in files:return self.send(404,{'error':'No encontrado'})
             raw=(ROOT/'static'/files[path]).read_bytes();self.send_response(200)
-            self.send_header('Content-Type',{'/':'text/html; charset=utf-8','/app.js':'text/javascript; charset=utf-8','/history.js':'text/javascript; charset=utf-8','/style.css':'text/css; charset=utf-8'}[path])
+            self.send_header('Content-Type',{'/':'text/html; charset=utf-8','/app.js':'text/javascript; charset=utf-8','/history.js':'text/javascript; charset=utf-8','/insights.js':'text/javascript; charset=utf-8','/style.css':'text/css; charset=utf-8'}[path])
             self.send_header('Content-Length',str(len(raw)));self.send_header('Cache-Control','no-store');self.send_header('X-Content-Type-Options','nosniff')
             self.send_header('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
             self.end_headers();self.wfile.write(raw);return
@@ -146,6 +148,7 @@ class Handler(BaseHTTPRequestHandler):
                     detail=network_inventory.hydrate(c,organization.hydrate(c,[row]))[0]
                     return self.send(200,{'server':detail,'current':dashboard(c,sid)['servers'][0]})
                 if path=='/api/catalogs':return self.send(200,permissions.catalogs(c,actor))
+                if path=='/api/dashboard/widgets':return self.send(200,dashboard_widgets.build(c,actor))
                 if path=='/api/dashboard':
                     result=dashboard(c);visible=permissions.visible_ids(c,actor)
                     result['servers']=network_inventory.hydrate(c,organization.hydrate(c,[row for row in result['servers'] if row['id'] in visible]));return self.send(200,result)
@@ -194,6 +197,10 @@ class Handler(BaseHTTPRequestHandler):
                 if path=='/api/logout':
                     c.execute('DELETE FROM sessions WHERE token=?',(actor['token'],));audit_log.record(c,actor,'auth.logout');c.commit()
                     return self.send(200,{},'qinv=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0')
+                if path=='/api/dashboard/preferences':
+                    result=dashboard_widgets.save(c,actor,json.loads(self.body()))
+                    audit_log.record(c,actor,'dashboard.preferences',{'before':result.pop('before'),'after':result['config']},target_type='user',target_id=actor['user_id']);c.commit()
+                    return self.send(200,result)
                 admin_paths={'/api/users','/api/catalogs','/api/settings','/api/import/preview','/api/import/commit','/api/servers/delete-preview','/api/servers/delete','/api/updates/check'}
                 if path in admin_paths:permissions.require_admin(actor)
                 else:permissions.require_write(actor)

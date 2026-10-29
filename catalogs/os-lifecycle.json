@@ -1,0 +1,271 @@
+{
+  "schema": 1,
+  "reviewed_on": "2026-10-29",
+  "policy": "standard",
+  "entries": [
+    {
+      "family": "RHEL",
+      "version": "5",
+      "end": "2017-03-31",
+      "source": "https://access.redhat.com/articles/4038291",
+      "basis": "Ciclo regular de la versión",
+      "note": ""
+    },
+    {
+      "family": "RHEL",
+      "version": "6",
+      "end": "2020-11-30",
+      "source": "https://access.redhat.com/articles/4038291",
+      "basis": "Ciclo regular de la versión",
+      "note": ""
+    },
+    {
+      "family": "RHEL",
+      "version": "7",
+      "end": "2024-06-30",
+      "source": "https://access.redhat.com/articles/7005471",
+      "basis": "Ciclo regular de la versión",
+      "note": ""
+    },
+    {
+      "family": "RHEL",
+      "version": "10",
+      "end": "2035-05-31",
+      "source": "https://access.redhat.com/product-life-cycles",
+      "basis": "Ciclo de la versión principal",
+      "note": "El ciclo principal no valida la vigencia de una versión menor ni de sus paquetes."
+    },
+    {
+      "family": "RHEL",
+      "version": "9",
+      "end": "2032-05-31",
+      "source": "https://access.redhat.com/product-life-cycles",
+      "basis": "Ciclo de la versión principal",
+      "note": "El ciclo principal no valida la vigencia de una versión menor ni de sus paquetes."
+    },
+    {
+      "family": "RHEL",
+      "version": "8",
+      "end": "2029-05-31",
+      "source": "https://access.redhat.com/product-life-cycles",
+      "basis": "Ciclo de la versión principal",
+      "note": "El ciclo principal no valida la vigencia de una versión menor ni de sus paquetes."
+    },
+    {
+      "family": "Windows Server",
+      "version": "2008",
+      "end": "2020-01-14",
+      "source": "https://learn.microsoft.com/en-us/lifecycle/products/windows-server-2008",
+      "basis": "Ciclo fijo ordinario, incluido Extended Support; sin ESU",
+      "note": "Se requiere un nivel de servicio y actualizaciones admitido por Microsoft."
+    },
+    {
+      "family": "Windows Server",
+      "version": "2012",
+      "end": "2023-10-10",
+      "source": "https://learn.microsoft.com/en-us/lifecycle/products/windows-server-2012",
+      "basis": "Ciclo fijo ordinario, incluido Extended Support; sin ESU",
+      "note": "Se requiere un nivel de servicio y actualizaciones admitido por Microsoft."
+    },
+    {
+      "family": "Windows Server",
+      "version": "2016",
+      "end": "2027-01-12",
+      "source": "https://learn.microsoft.com/en-us/windows/release-health/windows-server-release-info",
+      "basis": "Ciclo fijo ordinario, incluido Extended Support; sin ESU",
+      "note": "Se requiere un nivel de servicio y actualizaciones admitido por Microsoft."
+    },
+    {
+      "family": "Windows Server",
+      "version": "2019",
+      "end": "2029-01-09",
+      "source": "https://learn.microsoft.com/en-us/windows/release-health/windows-server-release-info",
+      "basis": "Ciclo fijo ordinario, incluido Extended Support; sin ESU",
+      "note": "Se requiere un nivel de servicio y actualizaciones admitido por Microsoft."
+    },
+    {
+      "family": "Windows Server",
+      "version": "2022",
+      "end": "2031-10-14",
+      "source": "https://learn.microsoft.com/en-us/windows/release-health/windows-server-release-info",
+      "basis": "Ciclo fijo ordinario, incluido Extended Support; sin ESU",
+      "note": "Se requiere un nivel de servicio y actualizaciones admitido por Microsoft."
+    },
+    {
+      "family": "Windows Server",
+      "version": "2025",
+      "end": "2034-11-14",
+      "source": "https://learn.microsoft.com/en-us/windows/release-health/windows-server-release-info",
+      "basis": "Ciclo fijo ordinario, incluido Extended Support; sin ESU",
+      "note": "Se requiere un nivel de servicio y actualizaciones admitido por Microsoft."
+    },
+    {
+      "family": "Ubuntu",
+      "version": "14.04",
+      "end": "2019-04",
+      "source": "https://ubuntu.com/about/release-cycle",
+      "basis": "Mantenimiento de seguridad estándar, sin Ubuntu Pro/ESM",
+      "note": "La fuente publica el mes de finalización, no un día exacto. Aplica al producto Ubuntu, no se hereda a otras distribuciones o sabores."
+    },
+    {
+      "family": "Ubuntu",
+      "version": "16.04",
+      "end": "2021-04",
+      "source": "https://ubuntu.com/about/release-cycle",
+      "basis": "Mantenimiento de seguridad estándar, sin Ubuntu Pro/ESM",
+      "note": "La fuente publica el mes de finalización, no un día exacto. Aplica al producto Ubuntu, no se hereda a otras distribuciones o sabores."
+    },
+    {
+      "family": "Ubuntu",
+      "version": "18.04",
+      "end": "2023-05",
+      "source": "https://ubuntu.com/about/release-cycle",
+      "basis": "Mantenimiento de seguridad estándar, sin Ubuntu Pro/ESM",
+      "note": "La fuente publica el mes de finalización, no un día exacto. Aplica al producto Ubuntu, no se hereda a otras distribuciones o sabores."
+    },
+    {
+      "family": "Ubuntu",
+      "version": "20.04",
+      "end": "2025-05",
+      "source": "https://ubuntu.com/about/release-cycle",
+      "basis": "Mantenimiento de seguridad estándar, sin Ubuntu Pro/ESM",
+      "note": "La fuente publica el mes de finalización, no un día exacto. Aplica al producto Ubuntu, no se hereda a otras distribuciones o sabores."
+    },
+    {
+      "family": "Ubuntu",
+      "version": "22.04",
+      "end": "2027-05",
+      "source": "https://ubuntu.com/about/release-cycle",
+      "basis": "Mantenimiento de seguridad estándar, sin Ubuntu Pro/ESM",
+      "note": "La fuente publica el mes de finalización, no un día exacto. Aplica al producto Ubuntu, no se hereda a otras distribuciones o sabores."
+    },
+    {
+      "family": "Ubuntu",
+      "version": "24.04",
+      "end": "2029-05",
+      "source": "https://ubuntu.com/about/release-cycle",
+      "basis": "Mantenimiento de seguridad estándar, sin Ubuntu Pro/ESM",
+      "note": "La fuente publica el mes de finalización, no un día exacto. Aplica al producto Ubuntu, no se hereda a otras distribuciones o sabores."
+    },
+    {
+      "family": "AIX",
+      "version": "7.1",
+      "end": "2023-04-30",
+      "source": "https://www.ibm.com/support/pages/node/1125435",
+      "basis": "Ciclo regular de la versión",
+      "note": ""
+    },
+    {
+      "family": "AIX",
+      "version": "7.2 TL0",
+      "end": "2018-12-31",
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "AIX",
+      "version": "7.2 TL1",
+      "end": "2019-11-30",
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "AIX",
+      "version": "7.2 TL2",
+      "end": "2020-10-31",
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "AIX",
+      "version": "7.2 TL3",
+      "end": "2021-09-30",
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "AIX",
+      "version": "7.2 TL4",
+      "end": "2022-11-30",
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "AIX",
+      "version": "7.2 TL5",
+      "end": null,
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "AIX",
+      "version": "7.3 TL0",
+      "end": "2024-12-31",
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "AIX",
+      "version": "7.3 TL1",
+      "end": "2025-12-31",
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "AIX",
+      "version": "7.3 TL2",
+      "end": "2026-11-30",
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "AIX",
+      "version": "7.3 TL3",
+      "end": "2027-12-31",
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "AIX",
+      "version": "7.3 TL4",
+      "end": "2028-12-31",
+      "source": "https://www.ibm.com/support/pages/aix-support-lifecycle-information",
+      "basis": "Fin de soporte de correcciones del Technology Level; no EOS del producto",
+      "note": "Un TL vencido puede requerir actualizar el TL y no sustituir la versión principal de AIX. Una fecha pendiente de IBM no implica soporte indefinido."
+    },
+    {
+      "family": "Solaris",
+      "version": "10",
+      "end": "2018-01",
+      "source": "https://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf",
+      "basis": "Premier Support, sin Extended ni Sustaining Support",
+      "note": "Fecha publicada por mes. Requiere hardware elegible y nivel SRU/LSU admitido; no se verifica cobertura contractual."
+    },
+    {
+      "family": "Solaris",
+      "version": "11.3",
+      "end": "2021-01",
+      "source": "https://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf",
+      "basis": "Premier Support, sin Extended ni Sustaining Support",
+      "note": "Fecha publicada por mes. Requiere hardware elegible y nivel SRU/LSU admitido; no se verifica cobertura contractual."
+    },
+    {
+      "family": "Solaris",
+      "version": "11.4",
+      "end": "2031-11",
+      "source": "https://www.oracle.com/us/support/library/lifetime-support-hardware-301321.pdf",
+      "basis": "Premier Support, sin Extended ni Sustaining Support",
+      "note": "Fecha publicada por mes. Requiere hardware elegible y nivel SRU/LSU admitido; no se verifica cobertura contractual."
+    }
+  ]
+}
