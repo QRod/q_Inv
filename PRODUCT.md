@@ -20,7 +20,7 @@ Aplicación web autohospedada en Linux con systemd y Python 3.11+. Acceso median
 
 ## Capabilities and Constraints
 
-- Inventario manual y conciliación de la hoja vInfo de RVTools por UUID.
+- Inventario manual y conciliación de vInfo/vNetwork de RVTools por UUID, con tarjetas e IPs IPv4/IPv6.
 - Grupos y aplicaciones múltiples, ambiente, responsable principal y etiquetas.
 - Descubrimiento SSH para Linux, AIX y SunOS; métricas periódicas disponibles para Linux. La compatibilidad debe validarse por plataforma y versión.
 - Credenciales SSH cifradas y comprobación de huellas; algoritmos de conexión modernos.

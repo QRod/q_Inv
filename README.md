@@ -15,7 +15,7 @@ q_Inv centraliza el inventario de infraestructura, organiza los equipos por serv
 ## Funcionalidades
 
 - **Inventario centralizado.** Registro y edición de servidores físicos y virtuales, con IP, sistema operativo, UUID, CPU, RAM, disco, host y clúster.
-- **Importación RVTools.** Archivos Excel con hoja `vInfo`, validación, vista previa y conciliación por UUID para actualizar registros sin duplicarlos.
+- **Importación RVTools.** Inventario desde `vInfo` y tarjetas desde `vNetwork`, con varias IPs IPv4/IPv6, validación, vista previa y conciliación por UUID sin duplicados.
 - **Organización flexible.** Varios grupos y aplicaciones por servidor, ambiente, responsable principal y etiquetas; búsqueda, filtros y clasificación masiva.
 - **Dashboard de recursos.** Tarjetas compactas con CPU, memoria, disco raíz, red y E/S, estados de conexión y detalles ampliables.
 - **Monitoreo SSH.** Descubrimiento de inventario y recolección periódica Linux, con credenciales cifradas, comprobación de huella y retención configurable.
@@ -28,7 +28,7 @@ q_Inv centraliza el inventario de infraestructura, organiza los equipos por serv
 
 ### Inventario
 
-Consulta capacidades y clasificaciones, filtra equipos y realiza operaciones sobre la selección.
+Consulta capacidades y clasificaciones, expande tarjetas e IPs, busca por IP secundaria o MAC y realiza operaciones sobre la selección.
 
 ![Inventario con servidores ficticios, capacidades de CPU, RAM y disco, grupos, aplicaciones y acciones de edición.](docs/images/inventario.png)
 
@@ -37,7 +37,7 @@ Consulta capacidades y clasificaciones, filtra equipos y realiza operaciones sob
 
 La importación presenta los registros nuevos y las actualizaciones antes de confirmar. La conciliación conserva la clasificación existente.
 
-![Vista previa de una importación RVTools con tres servidores ficticios y sus capacidades.](docs/images/importacion-rvtools.png)
+![Vista previa de RVTools con servidores ficticios, capacidades, tarjetas e IPs IPv4/IPv6.](docs/images/importacion-rvtools.png)
 
 Los catálogos comparten grupos, aplicaciones, ambientes, responsables y etiquetas entre servidores. Renombrar una entrada conserva sus asignaciones.
 
@@ -74,9 +74,9 @@ Requiere una VM o servidor Linux con **systemd**, acceso administrativo y **Pyth
 Descarga y revisa el instalador de la versión estable; sustituye `SERVIDOR` por la IP o el nombre del servidor:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/QRod/q_Inv/v0.5.0/install.sh -o q-inv-install.sh
+curl -fsSL https://raw.githubusercontent.com/QRod/q_Inv/v0.6.0/install.sh -o q-inv-install.sh
 less q-inv-install.sh
-sudo bash q-inv-install.sh --version v0.5.0 --address SERVIDOR --https-port 8443
+sudo bash q-inv-install.sh --version v0.6.0 --address SERVIDOR --https-port 8443
 ```
 
 Crea la primera cuenta administradora:
@@ -94,7 +94,7 @@ El instalador verifica el SHA-256 de la entrega, crea un servicio sin privilegio
 | Área | Alcance actual |
 |---|---|
 | Instalación | Linux con systemd y Python 3.11+. Rutas para familias Debian/Ubuntu, Fedora/RHEL, openSUSE y Arch. |
-| Inventario | Alta manual de servidores físicos y virtuales; importación de `vInfo` de RVTools. |
+| Inventario | Alta manual de servidores físicos y virtuales; importación de `vInfo` y redes de `vNetwork` de RVTools. |
 | Monitoreo periódico | Linux mediante SSH con algoritmos modernos. Intervalo inicial de 5 minutos y retención de 60 días, configurables. |
 | Otros sistemas | Consultas de descubrimiento para AIX y SunOS pendientes de validación por plataforma; Windows admite inventario manual/importado, sin recolector específico. |
 | Identidad | Usuarios locales. Active Directory no está integrado. |

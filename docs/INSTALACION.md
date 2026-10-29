@@ -5,9 +5,9 @@ El instalador independiente descarga una entrega de GitHub Releases, verifica SH
 Para una IP o nombre de la red local, sustituye `SERVIDOR`:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/QRod/q_Inv/v0.5.0/install.sh -o install.sh
+curl -fsSL https://raw.githubusercontent.com/QRod/q_Inv/v0.6.0/install.sh -o install.sh
 less install.sh
-sudo bash install.sh --version v0.5.0 --address SERVIDOR --https-port 8443
+sudo bash install.sh --version v0.6.0 --address SERVIDOR --https-port 8443
 ```
 
 La CA local genera el certificado en cada instalación; no hay certificados ni claves compartidos. El navegador advertirá de la falta de confianza hasta importar la CA local del proxy en el cliente.
@@ -15,7 +15,7 @@ La CA local genera el certificado en cada instalación; no hay certificados ni c
 Para dominio y certificado público de Let's Encrypt:
 
 ```sh
-sudo bash install.sh --version v0.5.0 --address app.example.com --tls public --https-port 443 --email admin@example.com
+sudo bash install.sh --version v0.6.0 --address app.example.com --tls public --https-port 443 --email admin@example.com
 ```
 
 El DNS debe apuntar al servidor y los puertos 80/443 estar libres y accesibles desde Internet. Caddy gestiona emisión y renovación. Si ya tienes un proxy compartido o esos puertos ocupados, usa `--proxy external` y configura tu proxy HTTPS contra el backend en loopback; el instalador no modifica ese proxy. El firewall permanece bajo administración del operador.

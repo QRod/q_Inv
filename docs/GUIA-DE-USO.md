@@ -10,9 +10,23 @@ El selector **Apariencia** ofrece Claro, Oscuro y Sistema, con preferencia guard
 
 Una cuenta administradora puede cargar un archivo `.xlsx` desde **Importar RVTools** y pulsar **Validar y previsualizar**. La hoja `vInfo` debe contener el nombre de la VM y un UUID; se admiten hasta 20 MB y 10 000 filas. Las filas inválidas bloquean la confirmación. La vista previa expira a los 30 minutos.
 
-La conciliación utiliza `VM UUID`, `UUID` o `Instance UUID`. Repetir una importación actualiza los mismos registros y conserva sus grupos, aplicaciones y demás clasificaciones. Los otros campos de inventario se reemplazan por los de la exportación; un campo ausente queda vacío. RAM y disco se convierten de MiB a GiB desde `Memory` y `Provisioned MiB`. No se procesa `vDisk` ni se agregan otras hojas.
+La conciliación utiliza `VM UUID`, `UUID` o `Instance UUID`. Repetir una importación actualiza los mismos registros y conserva sus grupos, aplicaciones y demás clasificaciones. Los otros campos de inventario se reemplazan por los de la exportación; un campo ausente queda vacío. RAM y disco se convierten de MiB a GiB desde `Memory` y `Provisioned MiB`. Las tarjetas e IPs se leen de `vNetwork` cuando está incluida. `vDisk` no se procesa.
 
 Revisar los encabezados y la vista previa antes de confirmar. Las capacidades importadas describen el inventario y no representan consumo en tiempo real.
+
+## Tarjetas de red y direcciones IP
+
+La importación reconoce las variantes `IPv4 Address`, `IPv6 Address` e `IP Address` de `vNetwork`. Cada tarjeta conserva nombre, tipo de adaptador, red, switch, MAC, conexión actual, conexión al iniciar y todas sus IPs reportadas. Las direcciones repetidas se normalizan; una tarjeta sin IP también se conserva.
+
+Las filas se relacionan con `vInfo` por VM UUID. Si falta ese identificador en `vNetwork`, solo se admite un nombre de VM único dentro del archivo. Una coincidencia ambigua o un UUID contradictorio bloquea la confirmación. La compatibilidad se basa en encabezados reconocidos; una exportación con encabezados distintos requiere adaptar el lector. La información disponible depende de lo que VMware Tools y RVTools hayan reportado.
+
+La vista previa permite expandir tarjetas e IPs antes de importar. En Inventario, expandir el resumen de red bajo el nombre; también puede consultarse en la edición y en Detalles del dashboard. La búsqueda considera IPs secundarias, red, adaptador y MAC.
+
+La IP principal define el destino SSH. Si ya existe una credencial guardada, la importación conserva ese destino y muestra por separado la IP principal reportada por RVTools; no prueba conexiones con las IPs adicionales. Para cambiarlo, editar la IP principal y revisar las credenciales del nuevo destino.
+
+Usar una exportación completa: una hoja filtrada puede omitir tarjetas. Revisar el resumen de red antes de confirmar. Una reimportación con `vNetwork` reemplaza las tarjetas de los servidores conciliados por las reportadas en el archivo; no las acumula. Si el archivo solo contiene `vInfo`, se pueden leer columnas `NIC #1`, `NIC #2`, etc. cuando existen. Sin columnas de tarjetas ni `vNetwork`, se conservan las interfaces guardadas. Una hoja de red válida sin filas para una VM indica que no hay tarjetas reportadas para ella.
+
+Límites: 100 000 filas en `vNetwork`, 128 tarjetas por VM, 128 IPs por tarjeta y 1024 IPs por VM. Las direcciones o MAC inválidas se muestran como errores de validación y bloquean la importación. Las IPs IPv6 locales al enlace se conservan como inventario y no se seleccionan automáticamente para SSH.
 
 ## Organización del inventario
 

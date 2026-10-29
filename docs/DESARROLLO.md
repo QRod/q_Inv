@@ -25,7 +25,7 @@ Esta ejecución escucha en loopback. Para una instalación accesible por red, ut
 .venv/bin/python tools/create_sample.py
 ```
 
-Importar `examples/RVTools-demo.xlsx` desde la interfaz. El libro es completamente sintético y contiene tres registros; repetir la carga actualiza los mismos servidores.
+Importar `examples/RVTools-demo.xlsx` desde la interfaz. El libro es completamente sintético y contiene tres VMs con dos tarjetas por VM; repetir la carga actualiza los mismos servidores.
 
 ## Verificación
 
@@ -42,6 +42,7 @@ QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-smoke.cjs
 QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-ui.cjs
 QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-compact.cjs
 QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-enterprise.cjs
+QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-network.cjs
 ```
 
 `QINV_CHROME` permite seleccionar el ejecutable de Chrome. GitHub Actions ejecuta las pruebas de Python, verifica la sintaxis JavaScript y shell y comprueba el empaquetado. Los resultados no sustituyen la validación de conexiones con cada sistema operativo remoto.
@@ -51,7 +52,9 @@ QINV_PLAYWRIGHT=/ruta/a/playwright-core node tests/browser-enterprise.cjs
 Desde un checkout limpio y con la versión correspondiente en `VERSION`:
 
 ```sh
-python3 scripts/package_release.py v0.5.0
+python3 scripts/package_release.py v0.6.0
 ```
 
 El artefacto y `SHA256SUMS` se generan en `dist/`. El paquete incluye únicamente archivos versionados y excluye datos, claves, entornos virtuales y resultados locales. La autenticidad de la descarga depende del repositorio oficial y de HTTPS; la suma comprueba su integridad.
+
+El contrato de interfaces y direcciones se documenta en [Datos de red en la API](API-RED.md).

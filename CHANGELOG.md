@@ -1,5 +1,15 @@
 # Cambios
 
+## v0.6.0 — 2026-10-29
+
+- Importación de todas las tarjetas de `vNetwork`, con red, MAC, tipo de adaptador, switch y estados de conexión.
+- Varias direcciones IPv4/IPv6 por tarjeta; compatibilidad con columnas separadas y la columna `IP Address`.
+- Conciliación por UUID; un nombre ambiguo bloquea la importación cuando falta ese identificador.
+- Vista previa y detalle de red en inventario, edición y dashboard; búsqueda por IP secundaria, red y MAC.
+- La importación conserva el destino de conexiones SSH guardadas y registra por separado la IP principal reportada.
+- Reimportación de redes sin duplicados; los archivos sin información de tarjetas conservan los datos de red existentes.
+- Datos de red incluidos en auditoría y eliminados junto con el registro de inventario.
+
 ## v0.5.0 — 2026-10-29
 
 - Roles de administrador, operador y lector; visibilidad y modificación por grupos,
