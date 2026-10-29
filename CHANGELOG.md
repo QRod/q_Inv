@@ -1,5 +1,14 @@
 # Cambios
 
+## v0.8.0 — 2026-10-29
+
+- Una vista personalizable por cuenta, con selección y orden de widgets, filtros de grupo, ambiente y tipo de equipo y opción de ocultar tarjetas.
+- Distribución de sistemas operativos y clasificación del ciclo de soporte estándar, con fuentes del fabricante, horizonte configurable y estado Por verificar para datos insuficientes.
+- Indicadores de cobertura de monitoreo, presión reciente de CPU/RAM/disco raíz, capacidad asignada por aplicación y calidad del inventario.
+- Acceso desde los recuentos al inventario de los equipos correspondientes; permisos aplicados antes de agregar los datos.
+- Preferencias persistentes, auditoría de cambios y detección de conflictos entre pestañas.
+- Separación de capacidades físicas y virtuales y de equipos compartidos para evitar sumas duplicadas. No se incluyen predicciones ni capacidad libre del hipervisor.
+
 ## v0.7.0 — 2026-10-29
 
 - Ficha de servidor al pulsar su nombre en el dashboard, con estado registrado, inventario, clasificación y red.

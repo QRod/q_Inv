@@ -17,6 +17,7 @@ q_Inv centraliza el inventario de infraestructura, organiza los equipos por serv
 - **Inventario centralizado.** Registro y edición de servidores físicos y virtuales, con IP, sistema operativo, UUID, CPU, RAM, disco, host y clúster.
 - **Importación RVTools.** Inventario desde `vInfo` y tarjetas desde `vNetwork`, con varias IPs IPv4/IPv6, validación, vista previa y conciliación por UUID sin duplicados.
 - **Organización flexible.** Varios grupos y aplicaciones por servidor, ambiente, responsable principal y etiquetas; búsqueda, filtros y clasificación masiva.
+- **Widgets personalizables.** Sistemas operativos y ciclo de soporte estándar, cobertura de monitoreo, presión de recursos, capacidad por aplicación y calidad del inventario; filtros, orden y umbrales guardados por cuenta.
 - **Dashboard y gráficas.** Tarjetas compactas de recursos; al pulsar el nombre se abre una ficha con estado, inventario e historial interactivo de CPU, RAM, disco, red y E/S.
 - **Monitoreo SSH.** Descubrimiento de inventario y recolección periódica Linux, con credenciales cifradas, comprobación de huella y retención configurable.
 - **Usuarios y permisos.** Cuentas locales con roles Administrador, Operador y Lector, y visibilidad por grupos de servidores.
@@ -25,6 +26,17 @@ q_Inv centraliza el inventario de infraestructura, organiza los equipos por serv
 - **Interfaz adaptable.** Botón de tema claro/oscuro, navegación por teclado y vistas adaptadas a dispositivos móviles. La apariencia inicial sigue el sistema hasta elegir un tema.
 
 ## Pantallas
+
+### Personalización y análisis
+
+Selecciona los widgets y su orden, filtra por grupo o ambiente y ajusta el horizonte de soporte y los umbrales de recursos. Cada cuenta conserva su propia vista. Los recuentos abren el inventario de los equipos correspondientes.
+
+<details>
+<summary><strong>Ver opciones de personalización</strong></summary>
+
+![Personalización de widgets, orden, filtros y umbrales en una cuenta de demostración.](docs/images/personalizar-dashboard.png)
+
+</details>
 
 ### Ficha e historial
 
@@ -85,9 +97,9 @@ Requiere una VM o servidor Linux con **systemd**, acceso administrativo y **Pyth
 Descarga y revisa el instalador de la versión estable; sustituye `SERVIDOR` por la IP o el nombre del servidor:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/QRod/q_Inv/v0.7.0/install.sh -o q-inv-install.sh
+curl -fsSL https://raw.githubusercontent.com/QRod/q_Inv/v0.8.0/install.sh -o q-inv-install.sh
 less q-inv-install.sh
-sudo bash q-inv-install.sh --version v0.7.0 --address SERVIDOR --https-port 8443
+sudo bash q-inv-install.sh --version v0.8.0 --address SERVIDOR --https-port 8443
 ```
 
 Crea la primera cuenta administradora:
@@ -111,10 +123,11 @@ El instalador verifica el SHA-256 de la entrega, crea un servicio sin privilegio
 | Identidad | Usuarios locales. Active Directory no está integrado. |
 | Actualizaciones | Consulta de publicaciones estables y guía de comandos; instalación ejecutada por el administrador del sistema. |
 
-Las capacidades de inventario se distinguen del consumo medido. El disco del dashboard corresponde al sistema de archivos raíz `/`; un error SSH no demuestra que el servidor esté apagado. La compatibilidad de sistemas antiguos debe verificarse por versión; no se habilitan algoritmos SHA-1. Los widgets personalizables y las alertas no están disponibles en la versión actual.
+Las capacidades de inventario se distinguen del consumo medido. El disco del dashboard corresponde al sistema de archivos raíz `/`; un error SSH no demuestra que el servidor esté apagado. La compatibilidad de sistemas antiguos debe verificarse por versión; no se habilitan algoritmos SHA-1. Las alertas y las proyecciones de capacidad no están integradas. El ciclo de soporte es una referencia de planificación basada en la versión registrada y en fuentes del fabricante; no certifica contratos ni parches.
 
 ## Documentación
 
+- [Widgets y soporte](docs/WIDGETS.md): personalización, indicadores, catálogo de fabricantes y límites de interpretación.
 - [Ficha e historial](docs/HISTORIAL.md): gráficas, rangos, exploración y resultados de consultas SSH.
 - [Guía de uso](docs/GUIA-DE-USO.md): dashboard, inventario, clasificación, RVTools y conexión SSH.
 - [Instalación](docs/INSTALACION.md): requisitos, distribuciones, HTTPS y despliegue.
