@@ -10,7 +10,7 @@
 - Auditoría estructurada, paginada y consultable; cambios antes/después sin secretos.
 - Búsqueda manual de actualizaciones estables con guía de comandos; sin ejecución web.
 - Respaldo privado y consistente mediante la consola administrativa.
-- Paramiko 5.1.0 y política SSH moderna; los servidores antiguos requieren piloto
+- Paramiko 5.1.0 y negociación SSH moderna; los servidores antiguos requieren validación
   y podrían necesitar actualización de su configuración SSH.
 
 La base agrega roles, autorizaciones y campos de auditoría. Las credenciales,
@@ -33,7 +33,7 @@ cuentas, inventario, organización, configuración y métricas se conservan. Ver
 
 ### Mejorado
 
-- Interfaz coherente de inventario y monitoreo inspirada en Braun/Nothing.
+- Interfaz coherente de inventario y monitoreo, con superficies neutras y jerarquía visual uniforme.
 - Contraste, legibilidad, iconos y tamaño de controles; navegación móvil completa.
 - Formulario con registro manual primero y descubrimiento SSH opcional.
 - Nombres accesibles de los diálogos y contexto de la navegación principal.

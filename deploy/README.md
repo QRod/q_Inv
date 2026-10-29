@@ -1,8 +1,7 @@
 # Despliegue
 
-`install.sh` genera unidades systemd y configuración HTTPS en cada servidor.
-La configuración activa y sus secretos pertenecen a `/etc`, los datos a `/var/lib`
-y las entregas inmutables a `/opt`. No copiar archivos activos al repositorio.
+`install.sh` genera el servicio systemd y la configuración HTTPS. El código se instala en `/opt/q-inv/releases/`, los datos en `/var/lib/q-inv` y la configuración privada en `/etc/q-inv`.
 
-Para un proxy externo, dirigir las solicitudes HTTPS al backend loopback elegido.
-Mantener Host y configurar el origen público de Kanban mediante QKT_PUBLIC_ORIGIN.
+Con un proxy inverso existente, utilizar `--proxy external` y dirigir HTTPS al puerto del backend en loopback. El instalador conserva la administración del proxy externo y del firewall a cargo del operador.
+
+Consultar [Instalación](../docs/INSTALACION.md) y [Acceso y operación](../docs/ACCESO-Y-OPERACION.md) para requisitos, certificados, respaldo, actualización y restauración.

@@ -126,9 +126,9 @@ components:
 
 **Creative North Star: "Instrumentación operativa"**
 
-q_Inv interpreta las referencias Braun/Nothing autorizadas mediante superficies cálidas o carbón, divisores finos, tinta legible y controles familiares. La densidad sirve al trabajo diario de infraestructura y a la comparación de datos; el español y la lectura precisa son compromisos duraderos.
+q_Inv utiliza superficies claras o carbón, divisores finos, texto legible y controles familiares. La densidad sirve al trabajo diario de infraestructura y a la comparación de datos; el español y la lectura precisa son compromisos duraderos.
 
-El sistema documenta la implementación final en HTML/CSS/JavaScript. La dirección Operate se construyó directamente en código, sin comp raster ni seed: esa omisión está declarada en el contrato de dirección y no equivale a una aprobación de assets inexistentes.
+El sistema documenta los componentes y tokens implementados en HTML, CSS y JavaScript.
 
 **Key Characteristics:**
 

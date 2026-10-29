@@ -153,14 +153,14 @@ su propio corte fallido; una reversión posterior requiere administración del s
 
 ## Política SSH y dependencias
 
-Esta entrega fija Paramiko 5.1.0 por decisión del usuario, tras revisar el aviso
+Esta entrega utiliza Paramiko 5.1.0 y aborda el aviso
 CVE-2026-44405 / PYSEC-2026-2858 de la versión 4. La rama 5 elimina los intercambios
 DH y las firmas RSA basados en SHA-1. Los equipos que solo acepten esos mecanismos
 no se conectarán; no se habilitan algoritmos antiguos globalmente para sortearlo.
 
-La validación de RHEL 5/6, AIX y SunOS antiguos queda para un piloto con equipos
-autorizados. El inventario manual y la importación siguen disponibles aunque su
-servidor SSH requiera modernizarse. Esto no afirma compatibilidad de monitoreo con
+Las conexiones a RHEL 5/6, AIX y SunOS antiguos requieren validación con cada
+versión de sistema y configuración SSH. El inventario manual y la importación siguen
+disponibles aunque su servidor SSH requiera modernizarse. Esto no afirma compatibilidad de monitoreo con
 cada sistema: las métricas periódicas actuales siguen siendo inicialmente Linux.
 
 Fuentes: [notas oficiales de Paramiko](https://www.paramiko.org/changelog.html) y
