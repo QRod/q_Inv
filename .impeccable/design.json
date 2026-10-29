@@ -680,7 +680,7 @@
     "keyCharacteristics": [
       "Superficies planas con contraste tonal.",
       "Cifras tabulares y estados escritos.",
-      "Tema claro, oscuro o del sistema.",
+      "Botón claro/oscuro, inicialmente según el sistema.",
       "Controles reconocibles y foco visible."
     ],
     "rules": [

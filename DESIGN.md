@@ -134,7 +134,7 @@ El sistema documenta los componentes y tokens implementados en HTML, CSS y JavaS
 
 - Superficies planas con contraste tonal.
 - Cifras tabulares y estados escritos.
-- Tema claro, oscuro o del sistema.
+- Botón claro/oscuro, inicialmente según el sistema.
 - Controles reconocibles y foco visible.
 
 ## Colors
@@ -153,7 +153,7 @@ Los pares `positive` / `positive-bg`, `warning` / `warning-bg` y `danger` / `dan
 
 **The Semantic Color Rule.** El color de estado acompaña una etiqueta o un valor; no sustituye el significado textual.
 
-El selector ofrece Claro, Oscuro y Sistema en acceso y espacio de trabajo. `qinv-theme` persiste en localStorage, sincroniza pestañas mediante `storage` y sigue `prefers-color-scheme` cuando se elige Sistema; el valor inicial es Sistema. Storage bloqueado no impide cambiar la apariencia. La propiedad `color-scheme` acompaña el tema para controles nativos.
+Un botón con icono de sol o luna y texto de acción alterna entre claro y oscuro en acceso y espacio de trabajo. Antes de la primera elección se sigue el sistema. `qinv-theme` persiste en localStorage, sincroniza pestañas mediante `storage` y sigue `prefers-color-scheme` mientras no haya una elección explícita; el valor inicial sigue el sistema. Storage bloqueado no impide cambiar la apariencia. La propiedad `color-scheme` acompaña el tema para controles nativos.
 
 ## Typography
 
@@ -187,7 +187,7 @@ Geometría funcional con bordes de 1 px: esquinas discretas en campos y botones,
 
 ### Buttons
 
-Primario de contraste neutral, secundario con borde, peligro con par semántico y acciones textuales transparentes. Mínimo general de 40 px; edición y selector de tema 36 px. El hover secundario usa `hover`, el primario reduce brillo a .9. Deshabilitado usa opacidad .55 y cursor no permitido. Transición de fondo de .16s ease-out, anulada con `prefers-reduced-motion`. Conservar foco de 3 px separado 3 px del borde.
+Primario de contraste neutral, secundario con borde, peligro con par semántico y acciones textuales transparentes. Mínimo general de 40 px; edición 36 px y botón de tema 40 px. El hover secundario usa `hover`, el primario reduce brillo a .9. Deshabilitado usa opacidad .55 y cursor no permitido. Transición de fondo de .16s ease-out, anulada con `prefers-reduced-motion`. Conservar foco de 3 px separado 3 px del borde.
 
 ### Inputs / Fields
 
@@ -238,3 +238,7 @@ botón de ejecución privilegiada.
 ## Inventario de red
 
 Las tarjetas e IPs importadas se consultan en detalles expandibles dentro del inventario y de la vista previa. La edición conserva una sección de consulta de red separada del campo de IP principal de conexión. Las listas usan texto ajustable, divisores y los tokens existentes. La expansión conserva su estado al filtrar y refrescar; la búsqueda considera direcciones secundarias, redes y MAC. No se añaden acentos ni controles de conexión por cada IP.
+
+## Ficha e historial
+
+Los nombres de tarjetas son enlaces subrayados y accesibles. La ficha usa la navegación y superficies existentes, con el estado registrado, inventario y gráficas SVG locales. Ejes y leyendas mantienen unidades, promedios y máximos; las curvas se interrumpen sin muestras válidas. El cursor de muestra es un control nativo de rango con teclado, acompañado por valores y una tabla. Las gráficas ajustan su viewBox al ancho real para conservar la lectura en móvil. Los colores y patrones de trazo reutilizan los tokens existentes.

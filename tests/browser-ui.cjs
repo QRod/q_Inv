@@ -19,7 +19,7 @@ const {chromium} = require(process.env.QINV_PLAYWRIGHT || 'playwright-core');
     const page = await context.newPage();
     const errors=[];page.on('pageerror',e=>errors.push(e.message));
     await page.goto(url);
-    await page.locator('#login [data-theme-select]').selectOption('dark');
+    await page.locator('#login [data-theme-toggle]').click();
     await page.reload();
     assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
     await page.locator('[name=username]').fill('qa');
@@ -27,7 +27,7 @@ const {chromium} = require(process.env.QINV_PLAYWRIGHT || 'playwright-core');
     await page.getByRole('button',{name:'Entrar al inventario'}).click();
     await page.locator('.server-widget').first().waitFor();
     for (const theme of ['light','dark']) {
-      await page.getByRole('combobox',{name:'Apariencia',exact:true}).selectOption(theme);
+      if(await page.locator('html').getAttribute('data-theme')!==theme)await page.locator('#workspace [data-theme-toggle]').click();
       for (const width of [1440,768,390,320]) {
         await page.setViewportSize({width,height:1000});
         for (const section of ['dashboard','inventory','organization']) {
@@ -59,12 +59,12 @@ const {chromium} = require(process.env.QINV_PLAYWRIGHT || 'playwright-core');
     assert.equal(await page.locator('#dashboard-status').isVisible(),true);
     await page.unroute('**/api/dashboard');await page.locator('#dashboard-reload').click();
     await page.locator('#dashboard-status').waitFor({state:'hidden'});
-    await page.getByRole('combobox',{name:'Apariencia',exact:true}).selectOption('system');
+    await page.evaluate(()=>localStorage.removeItem('qinv-theme'));await page.reload();
     await page.emulateMedia({colorScheme:'light'});await page.waitForFunction(()=>document.documentElement.dataset.theme==='light');
     await page.emulateMedia({colorScheme:'dark'});await page.waitForFunction(()=>document.documentElement.dataset.theme==='dark');
     // Storage can be unavailable under browser privacy policies; theme must still work.
-    const isolated=await browser.newContext();await isolated.addInitScript(()=>{Storage.prototype.getItem=()=>{throw Error('blocked')};Storage.prototype.setItem=()=>{throw Error('blocked')};});
-    const privatePage=await isolated.newPage();await privatePage.goto(url);await privatePage.locator('#login [data-theme-select]').selectOption('dark');
+    const isolated=await browser.newContext({colorScheme:'light'});await isolated.addInitScript(()=>{Storage.prototype.getItem=()=>{throw Error('blocked')};Storage.prototype.setItem=()=>{throw Error('blocked')};});
+    const privatePage=await isolated.newPage();await privatePage.goto(url);await privatePage.locator('#login [data-theme-toggle]').click();
     assert.equal(await privatePage.locator('html').getAttribute('data-theme'),'dark');await isolated.close();
     assert.deepEqual(errors,[]);
     console.log('UI QA OK: light/dark/system, persistence, blocked storage, 320–1440px, named dialog, manual-first entry, focus retention, filtered empty state, persistent errors and recovery.');
