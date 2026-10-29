@@ -28,17 +28,46 @@ function uiIcon(kind) {
 }
 for (const button of document.querySelectorAll('.dialog-heading button')) button.replaceChildren(uiIcon('close'));
 const $ = s => document.querySelector(s);
+let currentUser=null,sessionEpoch=0;
 let csrf = '', servers = [], pending = null, discoveryController = null;
 async function api(path, data, raw = false, signal) {
+  const requestEpoch=sessionEpoch;
   const res = await fetch('/api/' + path, data === undefined ? {} : {method:'POST', signal, headers:{'Content-Type':raw?'application/octet-stream':'application/json','X-CSRF-Token':csrf},body:raw?data:JSON.stringify(data)});
   const value = await res.json();
+  if(requestEpoch!==sessionEpoch)throw Error("La sesión cambió; vuelve a realizar la operación.");
+  if(path!=='login'&&currentUser?.context&&res.headers.has('X-Qinv-Context')&&res.headers.get('X-Qinv-Context')!==currentUser.context){showLogin();throw Error('La cuenta o sesión cambió. Inicia sesión de nuevo.');}
   if (!res.ok) { if(res.status===401 && path!=='login') showLogin(); throw Error(value.error || 'No se pudo completar la solicitud'); }
   return value;
 }
 function toast(text) { $('#toast').textContent=text; $('#toast').hidden=false; clearTimeout(toast.timer); toast.timer=setTimeout(()=>$('#toast').hidden=true,5500); }
-function showLogin() { $('#workspace').hidden=true; $('#login').hidden=false; servers=[]; pending=null; csrf=''; dashboardLastSuccess=null;$('#dashboard-status').hidden=true; selectedServers.clear();for(const id of ['server-dialog','catalog-dialog','bulk-dialog','delete-dialog'])$('#'+id).close(); }
-async function enter(user) { $('#user').textContent=user; $('#login').hidden=true; $('#workspace').hidden=false; await reload(); page('dashboard'); const settings=await api('settings'); for(const k of ['interval_minutes','retention_days']) $('#settings-form').elements[k].value=settings[k]; }
-function page(name) { for (const p of ['dashboard','inventory','organization','import','settings']) $('#'+p+'-page').hidden=p!==name; document.querySelectorAll('[data-page]').forEach(b=>(b.classList.toggle('active',b.dataset.page===name),b.dataset.page===name?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'))); $('#breadcrumb').textContent={dashboard:'Dashboard',inventory:'Inventario',organization:'Organización',import:'Importar RVTools',settings:'Configuración'}[name]; if(name==='dashboard')loadDashboard().catch(e=>toast(e.message)); }
+function showLogin() { sessionEpoch++;for(const id of ['search','dashboard-search','catalog-search','audit-event'])$('#'+id).value='';for(const id of ['server-environment','server-owner','bulk-environment','bulk-owner','group-filter','application-filter','environment-filter','owner-filter','tag-filter'])$('#'+id).replaceChildren();for(const id of ['total','virtual','physical','groups','nav-count','dash-total','dash-online','dash-attention','dash-pending'])$('#'+id).textContent='0';for(const id of ['discovery-status','credential-status','form-error','catalog-error','bulk-error','delete-error'])$('#'+id).textContent='';managedUsers=[];auditBefore=0;auditNext=null;auditHistory=[];currentUser=null;$('#workspace').dataset.role='reader';inventoryCatalogs={groups:[],applications:[],environments:[],owners:[],tags:[]};for(const form of ['server-form','catalog-form','user-form'])$('#'+form).reset();for(const id of ['preview-rows','bulk-preview-rows','delete-rows','server-groups','server-applications','server-tags','bulk-groups','bulk-applications','bulk-tags','account-groups'])$('#'+id).replaceChildren();$('#update-result').hidden=true;dashboardData={servers:[],interval_minutes:5};for(const id of ['server-widgets','servers','catalog-rows','user-rows','audit-rows'])$('#'+id).replaceChildren();$('#settings-form').reset();$('#user-form').reset(); $('#workspace').hidden=true; $('#login').hidden=false; servers=[]; pending=null; csrf=''; dashboardLastSuccess=null;$('#dashboard-status').hidden=true; selectedServers.clear();for(const id of ['server-dialog','catalog-dialog','bulk-dialog','delete-dialog','user-dialog'])$('#'+id).close(); }
+function canWrite(){return Boolean(currentUser?.capabilities?.write);}
+function isAdmin(){return Boolean(currentUser?.capabilities?.admin);}
+function applyAccess(){
+  $('#workspace').dataset.role=currentUser.role;
+  for(const control of document.querySelectorAll('[data-admin]'))control.hidden=!isAdmin();
+  for(const name of ['organization','import','settings'])document.querySelector(`[data-page=${name}]`).hidden=!isAdmin();
+  for(const id of ['go-import','empty-import','delete-selected'])$('#'+id).hidden=!isAdmin();
+  for(const id of ['add','dashboard-add','bulk-open','clear-selection','select-all'])$('#'+id).hidden=!canWrite();
+}
+async function enter(user){
+  currentUser=await api('session');if(!currentUser.authenticated){showLogin();return;}applyAccess();$('#user').textContent=user+' · '+({admin:'Administrador',operator:'Operador',reader:'Lector'}[currentUser.role]||'');
+  $('#login').hidden=true;$('#workspace').hidden=false;await reload();page('dashboard');
+  if(isAdmin()){
+    const settings=await api('settings');for(const k of ['interval_minutes','retention_days'])$('#settings-form').elements[k].value=settings[k];
+    await loadUpdateStatus();
+  }
+}
+function page(name){
+  if(['organization','import','settings','users','audit'].includes(name)&&!isAdmin())name='dashboard';
+  for(const p of ['dashboard','inventory','organization','import','settings','users','audit'])$('#'+p+'-page').hidden=p!==name;
+  document.querySelectorAll('[data-page]').forEach(b=>{b.classList.toggle('active',b.dataset.page===name);b.dataset.page===name?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current');});
+  $('#breadcrumb').textContent={dashboard:'Dashboard',inventory:'Inventario',organization:'Organización',import:'Importar RVTools',settings:'Configuración',users:'Usuarios y permisos',audit:'Auditoría'}[name];
+  if(name==='dashboard')loadDashboard().catch(e=>toast(e.message));
+  if(name==='users')loadUsers().catch(e=>toast(e.message));
+  if(name==='audit')loadAudit(true).catch(e=>toast(e.message));
+}
+
 async function reload() {
   [servers, inventoryCatalogs] = await Promise.all([api('servers'),api('catalogs')]);
   const existing=new Set(servers.map(s=>s.id));for(const id of selectedServers)if(!existing.has(id))selectedServers.delete(id);
@@ -60,9 +89,9 @@ function render() {
     const tags=cell(row,'');tags.className='tags-cell';for(const tag of s.tags||[])tags.append(node('span','badge',tag.name));
     const actions=cell(row,'');const button=node('button','edit','Editar');button.setAttribute('aria-label','Editar '+s.name);button.onclick=()=>edit(s);actions.append(button);$('#servers').append(row);
   }
-  $('#empty').hidden=filtered.length>0;$('#empty h2').textContent=servers.length?'No hay coincidencias':'Tu infraestructura comienza aquí';$('#empty p').textContent=servers.length?'Prueba con otros filtros de búsqueda.':'Agrega tu primer servidor o importa el inventario desde RVTools.';$('#empty-import').hidden=servers.length>0;$('#filtered-count').textContent=filtered.length;$('#result-label').textContent=filtered.length+' de '+servers.length+' servidores';updateSelection();
+  $('#empty').hidden=filtered.length>0;$('#empty h2').textContent=servers.length?'No hay coincidencias':'Tu infraestructura comienza aquí';$('#empty p').textContent=servers.length?'Prueba con otros filtros de búsqueda.':'Agrega tu primer servidor o importa el inventario desde RVTools.';$('#empty-import').hidden=servers.length>0||!isAdmin();if(!servers.length&&!isAdmin()){$('#empty h2').textContent='Sin servidores autorizados';$('#empty p').textContent='No hay equipos visibles en tus grupos. Solicita al administrador que revise tus autorizaciones.';}$('#filtered-count').textContent=filtered.length;$('#result-label').textContent=filtered.length+' de '+servers.length+' servidores';updateSelection();
 }
-function edit(data={}) { const form=$('#server-form');form.reset();for(const field of form.elements) if(field.name) field.value=data[field.name]??(field.name==='kind'?'virtual':'');$('#ssh-ip').value=data.ip||'';$('#ssh-port').value=data.ssh_port||22;$('#ssh-user').value=data.ssh_username||'';$('#ssh-enabled').checked=data.monitoring_enabled!==0;$('#ssh-password').placeholder=data.credentials_configured?'Guardada: deja vacío para conservar':'Contraseña SSH';$('#credential-status').textContent=data.credentials_configured?'Credencial cifrada guardada. No se muestra la contraseña.':'Las credenciales se guardarán cifradas al guardar el servidor.';$('#ssh-password').value='';$('#discovery-status').replaceChildren();$('#form-title').textContent=data.id?'Editar servidor':'Agregar servidor';$('#form-error').textContent='';setupServerOrganization(data);$('.discovery-panel').open=Boolean(data.credentials_configured);$('#server-dialog').showModal(); }
+function edit(data={}) { const form=$('#server-form');form.reset();for(const field of form.elements) if(field.name) field.value=data[field.name]??(field.name==='kind'?'virtual':'');$('#ssh-ip').value=data.ip||'';$('#ssh-port').value=data.ssh_port||22;$('#ssh-user').value=data.ssh_username||'';$('#ssh-enabled').checked=data.monitoring_enabled!==0;$('#ssh-password').placeholder=data.credentials_configured?'Guardada: deja vacío para conservar':'Contraseña SSH';$('#credential-status').textContent=data.credentials_configured?'Credencial cifrada guardada. No se muestra la contraseña.':'Las credenciales se guardarán cifradas al guardar el servidor.';$('#ssh-password').value='';$('#discovery-status').replaceChildren();$('#form-title').textContent=data.id?'Editar servidor':'Agregar servidor';$('#form-error').textContent='';setupServerOrganization(data);if(!data.id&&!isAdmin()&&currentUser.group_ids.length===1){$('#server-groups').selectedIds=new Set(currentUser.group_ids);picker($('#server-groups'),'groups',currentUser.group_ids);}$('#discover').disabled=!isAdmin()&&!data.id;if(!isAdmin()&&!data.id)$('#discovery-status').textContent='Guarda primero el servidor en uno de tus grupos para descubrirlo por SSH.';$('.discovery-panel').open=Boolean(data.credentials_configured);$('#server-dialog').showModal(); }
 $('#login-form').onsubmit=async e=>{e.preventDefault();const button=e.submitter;button.disabled=true;$('#login-error').textContent='';try{const d=Object.fromEntries(new FormData(e.target));const result=await api('login',d);csrf=result.csrf;e.target.reset();await enter(result.username);}catch(err){$('#login-error').textContent=err.message;}finally{button.disabled=false;}};
 $('#logout').onclick=async()=>{try{await api('logout',{});showLogin();}catch(e){toast(e.message);}};
 document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>page(b.dataset.page));$('#go-import').onclick=$('#empty-import').onclick=()=>page('import');$('#add').onclick=()=>edit();$('#close-dialog').onclick=$('#cancel').onclick=()=>$('#server-dialog').close();
@@ -158,6 +187,7 @@ function renderDashboard(){
   for(const card of $('#server-widgets').children)if(expanded.has(card.dataset.serverId))card.querySelector('.widget-details').open=true;
   $('#dashboard-empty-title').textContent=all.length?'No hay coincidencias':'Tu monitoreo comienza aquí';
   $('#dashboard-empty-message').textContent=all.length?'Prueba otra búsqueda o limpia los filtros para volver a ver tus servidores.':'Agrega servidores y configura sus credenciales SSH para comenzar a recopilar métricas.';
+  if(!all.length&&!isAdmin()){$('#dashboard-empty-title').textContent='Sin servidores autorizados';$('#dashboard-empty-message').textContent=canWrite()?'Agrega un servidor a uno de tus grupos autorizados o consulta al administrador.':'Solicita al administrador que asigne tus grupos y los servidores que puedes consultar.';}
   $('#dashboard-clear').hidden=!all.length;
   if(focusId&&focusAction) {
     const replacement=[...$('#server-widgets').children].find(card=>card.dataset.serverId===focusId)?.querySelector(focusAction);
@@ -238,7 +268,7 @@ function picker(container,kind,selected=[]){
     check.onchange=()=>{check.checked?container.selectedIds.add(entry.id):container.selectedIds.delete(entry.id);summarize();};
     label.append(check,node('span','',entry.name));labels.push({label,name:entry.name.toLowerCase()});list.append(label);
   }
-  if(!labels.length)list.append(node('p','muted','No hay opciones. Créala primero en Organización.'));
+  if(!labels.length)list.append(node('p','muted',isAdmin()?'No hay opciones. Créala primero en Organización.':'Solicita al administrador opciones para tus grupos.'));
   search.oninput=()=>{for(const item of labels)item.label.hidden=!item.name.includes(search.value.toLowerCase().trim());};
   summarize();details.append(summary,search,list);container.append(details);
 }
@@ -332,4 +362,85 @@ $('#delete-form').onsubmit=async event=>{
   try{const result=await api('servers/delete',{token:deletionToken,confirmed:true});$('#delete-dialog').close();selectedServers.clear();await reload();await loadDashboard();toast(`${result.deleted} servidores eliminados del inventario`);}
   catch(error){deletionToken=null;$('#delete-error').textContent=error.message+' Cierra esta ventana y revisa la selección de nuevo.';}
 };
+let managedUsers=[];
+const roleLabels={admin:'Administrador',operator:'Operador',reader:'Lector'};
+async function loadUsers(){
+  if(!isAdmin())return;
+  $('#users-status').textContent='Cargando cuentas…';
+  try{
+    const result=await api('users');managedUsers=result.users;$('#user-rows').replaceChildren();
+    for(const account of managedUsers){
+      const row=node('tr');cell(row,account.username);cell(row,roleLabels[account.role]);cell(row,account.active?'Activa':'Desactivada');
+      cell(row,account.role==='admin'?'Todos los servidores':account.group_ids.map(id=>inventoryCatalogs.groups.find(g=>g.id===id)?.name||'Grupo retirado').join(', ')||'Sin grupos: sin visibilidad').className='classification-cell';
+      const action=cell(row,'');const editButton=node('button','','Editar');editButton.setAttribute('aria-label','Editar usuario '+account.username);editButton.onclick=()=>editAccount(account);action.append(editButton);$('#user-rows').append(row);
+    }
+    $('#users-status').textContent=managedUsers.length+' cuentas registradas';
+  }catch(error){$('#users-status').textContent=error.message;}
+}
+function editAccount(account={}){
+  $('#user-form').reset();$('#account-id').value=account.id||'';$('#account-name').value=account.username||'';$('#account-role').value=account.role||'reader';$('#account-active').checked=account.active!==false;
+  $('#account-password').value='';$('#account-password').required=!account.id;$('#account-password-hint').textContent=account.id?'Deja vacío para conservar la contraseña. Cambiarla cierra las sesiones de esta cuenta.':'Entre 12 y 1024 caracteres.';
+  $('#user-title').textContent=account.id?'Editar usuario':'Crear usuario';$('#account-error').textContent='';picker($('#account-groups'),'groups',account.group_ids||[]);$('#user-dialog').showModal();
+}
+$('#user-add').onclick=()=>editAccount();
+for(const id of ['user-close','user-cancel'])$('#'+id).onclick=()=>$('#user-dialog').close();
+$('#user-dialog').addEventListener('close',()=>$('#account-password').value='');
+$('#user-form').onsubmit=async event=>{
+  event.preventDefault();const button=event.submitter;button.disabled=true;$('#account-error').textContent='';
+  try{
+    const data={username:$('#account-name').value.trim(),role:$('#account-role').value,active:$('#account-active').checked,group_ids:[...$('#account-groups').selectedIds],password:$('#account-password').value};
+    if($('#account-id').value)data.id=Number($('#account-id').value);
+    const result=await api('users',data);$('#user-dialog').close();
+    if(result.session_revoked){showLogin();toast('Cambios guardados. Inicia sesión de nuevo con tus permisos actualizados.');return;}
+    await loadUsers();toast('Usuario y autorizaciones guardados. Sus sesiones anteriores se cerraron.');
+  }catch(error){$('#account-error').textContent=error.message;}finally{button.disabled=false;}
+};
+const auditLabels={'legacy':'Registro anterior','auth.login':'Inicio de sesión','auth.logout':'Cierre de sesión','users.create':'Usuario creado','users.update':'Usuario modificado','users.create.cli':'Usuario creado por consola','servers.create':'Servidor registrado','servers.update':'Servidor modificado','servers.delete':'Servidores eliminados','servers.discover':'Descubrimiento SSH','organization.bulk':'Organización masiva','catalogs.save':'Catálogo guardado','catalogs.delete':'Catálogo eliminado','inventory.import':'Inventario importado','inventory.import.preview':'Importación previsualizada','settings.update':'Configuración modificada','metrics.refresh':'Consulta de métricas solicitada','access.denied':'Acceso denegado','updates.check':'Consulta de actualizaciones','system.backup':'Respaldo por consola'};
+let auditBefore=0,auditNext=null,auditHistory=[],auditRequest=0;
+async function loadAudit(reset=false){
+  if(!isAdmin())return;
+  if(reset){auditBefore=0;auditHistory=[];}
+  const request=++auditRequest;$('#audit-newer').disabled=true;$('#audit-older').disabled=true;
+  $('#audit-status').textContent='Consultando registros…';
+  try{
+    const query=new URLSearchParams({before:String(auditBefore),limit:'50',outcome:$('#audit-outcome').value,event:$('#audit-event').value.trim()});
+    const result=await api('audit?'+query);if(request!==auditRequest)return;auditNext=result.next_before;$('#audit-rows').replaceChildren();
+    for(const entry of result.records){
+      const row=node('tr');cell(row,new Date(entry.created_at.replace(' ','T')+'Z').toLocaleString('es-MX'));cell(row,entry.actor_username||(entry.user_id?'Usuario #'+entry.user_id:'Sistema'));
+      cell(row,auditLabels[entry.event]||entry.event,entry.event==='legacy'?entry.summary:entry.event).className='classification-cell';cell(row,{success:'Correcto',failure:'Fallido',denied:'Denegado'}[entry.outcome]||entry.outcome);
+      const detail=cell(row,''),button=node('button','','Ver cambios'),pre=node('pre','audit-detail');pre.hidden=true;
+      button.setAttribute('aria-label','Ver registro '+entry.id);button.setAttribute('aria-expanded','false');
+      button.onclick=async()=>{
+        if(!pre.hidden){pre.hidden=true;button.setAttribute('aria-expanded','false');return;}
+        button.disabled=true;
+        try{const full=await api('audit/'+entry.id);pre.textContent=JSON.stringify({target_type:full.target_type,target_id:full.target_id,details:full.details},null,2);pre.hidden=false;button.setAttribute('aria-expanded','true');}
+        catch(error){toast(error.message);}finally{button.disabled=false;}
+      };
+      detail.append(button,pre);$('#audit-rows').append(row);
+    }
+    $('#audit-status').textContent=result.records.length?result.records.length+' registros en esta página.':'No hay registros que coincidan con los filtros.';
+    $('#audit-newer').disabled=!auditHistory.length;$('#audit-older').disabled=!auditNext;
+  }catch(error){$('#audit-status').textContent=error.message;}
+}
+$('#audit-reload').onclick=()=>loadAudit(true);$('#audit-filter').onclick=()=>loadAudit(true);
+$('#audit-older').onclick=()=>{if(auditNext){auditHistory.push(auditBefore);auditBefore=auditNext;loadAudit();}};
+$('#audit-newer').onclick=()=>{if(auditHistory.length){auditBefore=auditHistory.pop();loadAudit();}};
+async function loadUpdateStatus(){
+  const status=await api('updates/status');$('#installed-version').textContent='Versión instalada: '+(status.installed||'desarrollo, sin versión verificable');
+  $('#check-updates').disabled=!status.checks_enabled;
+  if(!status.checks_enabled)$('#update-status').textContent='La consulta está deshabilitada por la administración del servidor.';
+}
+$('#check-updates').onclick=async()=>{
+  const button=$('#check-updates');button.disabled=true;$('#update-result').hidden=true;$('#update-status').textContent='Consultando publicaciones estables en GitHub…';
+  try{
+    const result=await api('updates/check',{});$('#update-status').textContent='Consulta terminada.';
+    $('#update-summary').textContent=result.available?'Hay una actualización disponible: '+result.latest+'.':result.available===null?'Última publicación: '+result.latest+'. No se pudo comparar con esta instalación.':'No hay una publicación posterior a tu versión instalada. Última publicación estable: '+result.latest+'.';
+    $('#update-release').href=result.release_url;$('#backup-command').value=result.backup_command;$('#update-command').value=result.update_command||'';$('#update-command-label').hidden=!result.available;$('#update-result').hidden=false;
+  }catch(error){$('#update-status').textContent=error.message;}finally{button.disabled=false;}
+};
+
+async function verifySession(){if(!currentUser||document.hidden)return;try{const identity=await api('session');if(!identity.authenticated)showLogin();}catch(error){toast(error.message);}}
+window.addEventListener('pageshow',event=>{if(event.persisted)verifySession();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)verifySession();});
+setInterval(verifySession,60000);
 (async()=>{try{const session=await api('session');if(session.authenticated){csrf=session.csrf;await enter(session.username);}}catch(error){toast(error.message);}})();

@@ -224,3 +224,13 @@ Usar diálogo nativo con nombre por `aria-labelledby`, título de tarea y botón
 - Don't convertir tarjetas en capas de sombras decorativas.
 - Don't reemplazar los iconos SVG de acción por glifos o depender solo del color.
 - Don't guardar la preferencia de apariencia como configuración del servidor.
+
+## Administración empresarial
+
+Usuarios y permisos, Auditoría y Actualizaciones heredan superficies, formularios,
+controles y temas existentes. Las vistas globales son exclusivas de administradores;
+lector y operador conservan navegación centrada en sus equipos. Los vacíos distinguen
+falta de autorizaciones de una búsqueda sin resultados. La auditoría muestra acciones
+en español y conserva sus identificadores técnicos, resultados y detalle expandible.
+Los comandos de operación se presentan como texto de solo lectura, nunca como un
+botón de ejecución privilegiada.
