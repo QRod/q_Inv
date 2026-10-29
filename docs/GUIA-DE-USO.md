@@ -4,7 +4,9 @@
 
 El dashboard reúne tarjetas compactas por servidor con CPU, memoria, disco raíz y tasas de red y E/S. **Detalles** amplía uptime, carga, acumulados, errores y fecha de consulta. La búsqueda y el filtro de estado permiten localizar equipos; el refresco conserva los detalles abiertos y el foco del teclado.
 
-El selector **Apariencia** ofrece Claro, Oscuro y Sistema, con preferencia guardada en el navegador. Los datos ausentes se muestran con un guion y se distinguen de una medición de cero.
+El botón de tema alterna entre claro y oscuro, con preferencia guardada en el navegador. Antes de elegir, sigue la apariencia del sistema. Los datos ausentes se muestran con un guion y se distinguen de una medición de cero.
+
+Al pulsar el nombre de una tarjeta se abre la [ficha e historial](HISTORIAL.md), con estado registrado, inventario y gráficas interactivas de recursos.
 
 ## Importar desde RVTools
 

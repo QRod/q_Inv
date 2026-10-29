@@ -1,5 +1,14 @@
 # Cambios
 
+## v0.7.0 — 2026-10-29
+
+- Ficha de servidor al pulsar su nombre en el dashboard, con estado registrado, inventario, clasificación y red.
+- Gráficas históricas de CPU, RAM, disco raíz, red y E/S; resultados de consultas SSH por intervalo.
+- Rangos predefinidos y fechas específicas, agregación de hasta 720 intervalos con promedios y máximos.
+- Periodos sin datos y fallos explícitos, cursor de exploración con teclado y tabla de valores.
+- Permisos por grupos aplicados a ficha e historial; consultas con índice por servidor y fecha.
+- Botón para alternar entre claro y oscuro, con preferencia persistente y apariencia inicial del sistema.
+
 ## v0.6.0 — 2026-10-29
 
 - Importación de todas las tarjetas de `vNetwork`, con red, MAC, tipo de adaptador, switch y estados de conexión.

@@ -27,13 +27,14 @@ Aplicación web autohospedada en Linux con systemd y Python 3.11+. Acceso median
 - Vista previa y confirmación de importaciones y operaciones masivas.
 - Roles Administrador, Operador y Lector con control de acceso en el backend.
 - Servidores sin grupo exclusivos de administradores; cambios de cuenta revocan sesiones.
+- Ficha de servidor con estado, inventario y gráficas de recursos históricos; rangos, promedios, máximos y periodos sin datos explícitos.
 - Auditoría de acciones y resultados, sin secretos, exclusiva de administradores.
 - Consulta manual de versiones con comandos de respaldo y actualización; la instalación se realiza desde el sistema operativo.
 - Active Directory, alertas, widgets personalizables y recolector Windows no están integrados.
 
 ## Brand Commitments
 
-Nombre q_Inv, interfaz en español y presentación centrada en el inventario y la lectura de recursos. Superficies neutras, jerarquía clara, cifras legibles y temas Claro, Oscuro y Sistema.
+Nombre q_Inv, interfaz en español y presentación centrada en el inventario y la lectura de recursos. Superficies neutras, jerarquía clara, cifras legibles y un botón para alternar entre temas claro y oscuro.
 
 ## Evidence on Hand
 

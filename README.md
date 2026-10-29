@@ -17,14 +17,25 @@ q_Inv centraliza el inventario de infraestructura, organiza los equipos por serv
 - **Inventario centralizado.** Registro y edición de servidores físicos y virtuales, con IP, sistema operativo, UUID, CPU, RAM, disco, host y clúster.
 - **Importación RVTools.** Inventario desde `vInfo` y tarjetas desde `vNetwork`, con varias IPs IPv4/IPv6, validación, vista previa y conciliación por UUID sin duplicados.
 - **Organización flexible.** Varios grupos y aplicaciones por servidor, ambiente, responsable principal y etiquetas; búsqueda, filtros y clasificación masiva.
-- **Dashboard de recursos.** Tarjetas compactas con CPU, memoria, disco raíz, red y E/S, estados de conexión y detalles ampliables.
+- **Dashboard y gráficas.** Tarjetas compactas de recursos; al pulsar el nombre se abre una ficha con estado, inventario e historial interactivo de CPU, RAM, disco, red y E/S.
 - **Monitoreo SSH.** Descubrimiento de inventario y recolección periódica Linux, con credenciales cifradas, comprobación de huella y retención configurable.
 - **Usuarios y permisos.** Cuentas locales con roles Administrador, Operador y Lector, y visibilidad por grupos de servidores.
 - **Auditoría.** Consulta de acciones, resultados y cambios anteriores/posteriores, sin incluir contraseñas.
 - **Operación administrada.** Consulta manual de actualizaciones, comandos de respaldo y actualización, instalación Linux con systemd y HTTPS.
-- **Interfaz adaptable.** Temas Claro, Oscuro y Sistema, navegación por teclado y vistas adaptadas a dispositivos móviles.
+- **Interfaz adaptable.** Botón de tema claro/oscuro, navegación por teclado y vistas adaptadas a dispositivos móviles. La apariencia inicial sigue el sistema hasta elegir un tema.
 
 ## Pantallas
+
+### Ficha e historial
+
+Pulsar el nombre de una tarjeta abre el estado registrado, los datos del servidor y sus gráficas. Explora periodos y valores con el cursor o el teclado.
+
+<details>
+<summary><strong>Ver ficha y gráficas históricas</strong></summary>
+
+![Ficha de un servidor ficticio con estado, inventario y gráficas de CPU, RAM, disco, red y E/S.](docs/images/historial.png)
+
+</details>
 
 ### Inventario
 
@@ -61,7 +72,7 @@ Revisa acciones y resultados con filtros y detalles de los cambios registrados.
 <details>
 <summary><strong>Tema oscuro</strong></summary>
 
-La apariencia puede seleccionarse manualmente o seguir la configuración del sistema.
+Un botón con icono de sol o luna alterna entre claro y oscuro. Antes de elegir, la apariencia sigue la configuración del sistema.
 
 ![Dashboard de los mismos doce servidores de demostración en tema oscuro.](docs/images/dashboard-oscuro.png)
 
@@ -74,9 +85,9 @@ Requiere una VM o servidor Linux con **systemd**, acceso administrativo y **Pyth
 Descarga y revisa el instalador de la versión estable; sustituye `SERVIDOR` por la IP o el nombre del servidor:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/QRod/q_Inv/v0.6.0/install.sh -o q-inv-install.sh
+curl -fsSL https://raw.githubusercontent.com/QRod/q_Inv/v0.7.0/install.sh -o q-inv-install.sh
 less q-inv-install.sh
-sudo bash q-inv-install.sh --version v0.6.0 --address SERVIDOR --https-port 8443
+sudo bash q-inv-install.sh --version v0.7.0 --address SERVIDOR --https-port 8443
 ```
 
 Crea la primera cuenta administradora:
@@ -100,10 +111,11 @@ El instalador verifica el SHA-256 de la entrega, crea un servicio sin privilegio
 | Identidad | Usuarios locales. Active Directory no está integrado. |
 | Actualizaciones | Consulta de publicaciones estables y guía de comandos; instalación ejecutada por el administrador del sistema. |
 
-Las capacidades de inventario se distinguen del consumo medido. El disco del dashboard corresponde al sistema de archivos raíz `/`; un error SSH no demuestra que el servidor esté apagado. La compatibilidad de sistemas antiguos debe verificarse por versión; no se habilitan algoritmos SHA-1. Los widgets personalizables, las gráficas de historial y las alertas no están disponibles en la versión actual.
+Las capacidades de inventario se distinguen del consumo medido. El disco del dashboard corresponde al sistema de archivos raíz `/`; un error SSH no demuestra que el servidor esté apagado. La compatibilidad de sistemas antiguos debe verificarse por versión; no se habilitan algoritmos SHA-1. Los widgets personalizables y las alertas no están disponibles en la versión actual.
 
 ## Documentación
 
+- [Ficha e historial](docs/HISTORIAL.md): gráficas, rangos, exploración y resultados de consultas SSH.
 - [Guía de uso](docs/GUIA-DE-USO.md): dashboard, inventario, clasificación, RVTools y conexión SSH.
 - [Instalación](docs/INSTALACION.md): requisitos, distribuciones, HTTPS y despliegue.
 - [Acceso y operación](docs/ACCESO-Y-OPERACION.md): permisos, auditoría, respaldo, restauración y actualizaciones.
